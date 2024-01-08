@@ -1,0 +1,4392 @@
+{
+  "compatibilityLevel": 1601,
+  "model": {
+    "annotations": [
+      {
+        "name": "__PBI_TimeIntelligenceEnabled",
+        "value": "0"
+      },
+      {
+        "name": "PBIDesktopVersion",
+        "value": "2.124.1052.0 (23.12)"
+      },
+      {
+        "name": "PBI_ProTooling",
+        "value": "[\"DevMode\",\"CalcGroup\",\"DaxQueryView_Desktop\"]"
+      },
+      {
+        "name": "PBI_QueryOrder",
+        "value": "[\"IC_raw\",\"IC Plan_raw\",\"Area_raw\",\"Position_raw\",\"IC_processed\",\"IC2_processed\",\"IC Plan_processed\",\"Date_processed\",\"Position Detail_processed\",\"IC\",\"IC2\",\"IC Plan\",\"Position Detail\",\"Area\",\"Position\",\"Date\",\"ME\",\"Area Target Range_raw\",\"Area Ach% Range_raw\",\"Initial Target Range_raw\",\"Initial Ach% Range_raw\",\"Length of Service Range_raw\",\"Net Growth Range_raw\",\"Area Target Range\",\"Area Ach% Range\",\"Initial Ach% Range\",\"Net Growth Range\",\"Length of Service Range\",\"Range of IC_raw\",\"paramICType\",\"paramNumber\",\"paramYear\",\"paramQuarter\",\"Get IC Ranges\",\"fxGetICRange\",\"Get Area Target Range\",\"fxGetAreaTargetRange\",\"Get Other Ranges\",\"fxGetOtherRange\",\"Get Length of Service Range\",\"paramLengthOfService\",\"paramPercent\",\"paramFolderPath\",\"fxGetLengthOfServiceRange\",\"Get Area Ach% Range\",\"fxGetAreaAch%Range\",\"Get Initial Ach% Range\",\"fxGetInitialAch%Range\",\"Get Net Growth IC Range\",\"fxGetNetGrowthRange\",\"Get Initial Target Range\",\"fxGetInitialTargetRange\",\"Glossary\",\"IC Type_raw\",\"Show Pct\"]"
+      },
+      {
+        "name": "__TEdtr",
+        "value": "1"
+      }
+    ],
+    "culture": "en-US",
+    "cultures": [
+      {
+        "name": "en-US",
+        "linguisticMetadata": {
+          "content": {
+            "DynamicImprovement": "HighConfidence",
+            "Language": "en-US",
+            "Version": "1.0.0"
+          },
+          "contentType": "json"
+        }
+      }
+    ],
+    "dataAccessOptions": {
+      "legacyRedirects": true,
+      "returnErrorValuesAsNull": true
+    },
+    "defaultPowerBIDataSourceVersion": "powerBI_V3",
+    "discourageImplicitMeasures": true,
+    "expressions": [
+      {
+        "name": "IC_raw",
+        "annotations": [
+          {
+            "name": "PBI_NavigationStepName",
+            "value": "Navigation"
+          },
+          {
+            "name": "PBI_ResultType",
+            "value": "Table"
+          }
+        ],
+        "expression": [
+          "let",
+          "    Source = Excel.Workbook(File.Contents(paramFolderPath&\"\\Data\\IC.xlsx\"), null, true),",
+          "    _data_Table = Source{[Item=\"_data\",Kind=\"Table\"]}[Data]",
+          "in",
+          "    _data_Table"
+        ],
+        "kind": "m",
+        "lineageTag": "b16691c7-9258-4dcf-9b37-266de699c608",
+        "queryGroup": "Staging"
+      },
+      {
+        "name": "IC Plan_raw",
+        "annotations": [
+          {
+            "name": "PBI_NavigationStepName",
+            "value": "Navigation"
+          },
+          {
+            "name": "PBI_ResultType",
+            "value": "Table"
+          }
+        ],
+        "expression": [
+          "let",
+          "    Source = Excel.Workbook(File.Contents(paramFolderPath & \"\\Data\\IC Plan.xlsx\"), null, true),",
+          "    _data_Table = Source{[Item=\"_data\",Kind=\"Table\"]}[Data]",
+          "in",
+          "    _data_Table"
+        ],
+        "kind": "m",
+        "lineageTag": "268f310b-f88c-4b7b-8e05-9eb9589d61cb",
+        "queryGroup": "Staging"
+      },
+      {
+        "name": "Area_raw",
+        "annotations": [
+          {
+            "name": "PBI_NavigationStepName",
+            "value": "Navigation"
+          },
+          {
+            "name": "PBI_ResultType",
+            "value": "Table"
+          }
+        ],
+        "expression": [
+          "let",
+          "    Source = Excel.Workbook(File.Contents(paramFolderPath & \"\\Data\\Area.xlsx\"), null, true),",
+          "    _data_Table = Source{[Item=\"_data\",Kind=\"Table\"]}[Data],",
+          "    #\"Changed Type\" = Table.TransformColumnTypes(_data_Table,{{\"ID\", Int64.Type}, {\"Area\", type text}})",
+          "in",
+          "    #\"Changed Type\""
+        ],
+        "kind": "m",
+        "lineageTag": "d431f26a-e4a5-40c0-8957-7b6962157f4f",
+        "queryGroup": "Staging"
+      },
+      {
+        "name": "Position_raw",
+        "annotations": [
+          {
+            "name": "PBI_NavigationStepName",
+            "value": "Navigation"
+          },
+          {
+            "name": "PBI_ResultType",
+            "value": "Table"
+          }
+        ],
+        "expression": [
+          "let",
+          "    Source = Excel.Workbook(File.Contents(paramFolderPath & \"\\Data\\Position.xlsx\"), null, true),",
+          "    _data_Table = Source{[Item=\"_data\",Kind=\"Table\"]}[Data],",
+          "    #\"Changed Type\" = Table.TransformColumnTypes(_data_Table,{{\"ID\", Int64.Type}, {\"Position\", type text}})",
+          "in",
+          "    #\"Changed Type\""
+        ],
+        "kind": "m",
+        "lineageTag": "e45cc580-4b25-4c91-87cd-16afcc1fb1ef",
+        "queryGroup": "Staging"
+      },
+      {
+        "name": "IC_processed",
+        "annotations": [
+          {
+            "name": "PBI_NavigationStepName",
+            "value": "Navigation"
+          },
+          {
+            "name": "PBI_ResultType",
+            "value": "Table"
+          }
+        ],
+        "expression": [
+          "let",
+          "    Source = IC_raw,",
+          "    #\"Added Custom\" = Table.AddColumn(Source, \"Position Code\", each if [Position] = \"REP\" then [Rep Position Code] else if [Position] = \"DM\" then [DM Position Code] else [RM Position Code]),",
+          "    #\"Added Custom1\" = Table.AddColumn(#\"Added Custom\", \"Name\", each if [Position] = \"REP\" then [Rep Name] else if [Position] = \"DM\" then [DM Name] else [RM Name]),",
+          "    #\"Merged Queries\" = Table.NestedJoin(#\"Added Custom1\", {\"Area\"}, Area_raw, {\"Area\"}, \"Area.1\", JoinKind.LeftOuter),",
+          "    #\"Expanded Area.1\" = Table.ExpandTableColumn(#\"Merged Queries\", \"Area.1\", {\"ID\"}, {\"Area ID\"}),",
+          "    #\"Merged Queries1\" = Table.NestedJoin(#\"Expanded Area.1\", {\"Position\"}, Position_raw, {\"Position\"}, \"Position_raw\", JoinKind.LeftOuter),",
+          "    #\"Expanded Position_processed\" = Table.ExpandTableColumn(#\"Merged Queries1\", \"Position_raw\", {\"ID\"}, {\"Position ID\"}),",
+          "    #\"Merged Queries2\" = Table.NestedJoin(#\"Expanded Position_processed\", {\"Year\", \"Quarter\"}, Date_processed, {\"Year\", \"Quarter\"}, \"Date_processed\", JoinKind.LeftOuter),",
+          "    #\"Expanded Date_processed\" = Table.ExpandTableColumn(#\"Merged Queries2\", \"Date_processed\", {\"ID\"}, {\"Year Quarter ID\"}),",
+          "    #\"Removed Columns1\" = Table.RemoveColumns(#\"Expanded Date_processed\",{\"Year\", \"Quarter\",\"RM Position Code\", \"RM Name\", \"DM Position Code\", \"DM Name\", \"Rep Position Code\", \"Rep Name\", \"Area\", \"Position\", \"Total IC\"}),",
+          "    #\"Unpivoted Other Columns\" = Table.UnpivotOtherColumns(#\"Removed Columns1\", {\"Year Quarter ID\", \"Area ID\", \"Position ID\", \"Position Code\", \"PID\", \"Name\", \"Hire Date\", \"Exit Date\",  \"Area Target\", \"Area Actual\", \"Ach%\", \"Net Growth\", \"Initial Target\", \"Initial Target (Unit)\", \"Initial Actual\", \"Initial Actual (Unit)\", \"Initial Ach%\"}, \"IC Type\", \"Amount\"),",
+          "    #\"Filtered Rows1\" = Table.SelectRows(#\"Unpivoted Other Columns\", each ([PID] <> null and [Amount] <> 0)),",
+          "    #\"Changed Type\" = Table.TransformColumnTypes(#\"Filtered Rows1\",{{\"PID\", Int64.Type}, {\"Hire Date\", type date}, {\"Exit Date\", type date}, {\"Area Target\", Currency.Type}, {\"Area Actual\", Currency.Type}, {\"Ach%\", Percentage.Type}, {\"Net Growth\", Currency.Type}, {\"Initial Target\", Currency.Type}, {\"Initial Actual\", Currency.Type}, {\"Initial Target (Unit)\", Int64.Type}, {\"Initial Actual (Unit)\", Int64.Type}, {\"Initial Ach%\", Percentage.Type}, {\"Position Code\", type text}, {\"Name\", type text}, {\"Amount\", Currency.Type}}),",
+          "    #\"Removed Other Columns\" = Table.SelectColumns(#\"Changed Type\",{\"Year Quarter ID\", \"Area ID\", \"Position ID\", \"Position Code\", \"PID\", \"Name\", \"Hire Date\", \"Exit Date\", \"Area Target\", \"Area Actual\", \"Ach%\", \"Net Growth\", \"Initial Target\", \"Initial Target (Unit)\", \"Initial Actual\", \"Initial Actual (Unit)\", \"Initial Ach%\", \"IC Type\", \"Amount\"}),",
+          "    #\"Split Column by Delimiter\" = Table.SplitColumn(#\"Removed Other Columns\", \"IC Type\", Splitter.SplitTextByEachDelimiter({\" \"}, QuoteStyle.Csv, true), {\"IC Type\", \"IC Type.2\"}),",
+          "    #\"Removed Columns\" = Table.RemoveColumns(#\"Split Column by Delimiter\",{\"IC Type.2\"}),",
+          "    #\"Merged Queries3\" = Table.NestedJoin(#\"Removed Columns\", {\"IC Type\"}, #\"IC Type_raw\", {\"IC Type\"}, \"IC Type_raw\", JoinKind.LeftOuter),",
+          "    #\"Expanded IC Type_raw\" = Table.ExpandTableColumn(#\"Merged Queries3\", \"IC Type_raw\", {\"ID\"}, {\"IC Type ID\"})",
+          "in",
+          "    #\"Expanded IC Type_raw\""
+        ],
+        "kind": "m",
+        "lineageTag": "9a3e7a8e-04a1-480f-a161-9ec947ec6a3c",
+        "queryGroup": "Processed"
+      },
+      {
+        "name": "IC Plan_processed",
+        "annotations": [
+          {
+            "name": "PBI_NavigationStepName",
+            "value": "Navigation"
+          },
+          {
+            "name": "PBI_ResultType",
+            "value": "Table"
+          }
+        ],
+        "expression": [
+          "let",
+          "    Source = #\"IC Plan_raw\",",
+          "    #\"Changed Type\" = Table.TransformColumnTypes(Source,{{\"Year\", Int64.Type}, {\"Quarter\", type text}, {\"Area\", type text}, {\"Amount\", Currency.Type}}),",
+          "    #\"Merged Queries\" = Table.NestedJoin(#\"Changed Type\", {\"Year\", \"Quarter\"}, Date_processed, {\"Year\", \"Quarter\"}, \"Date_processed\", JoinKind.LeftOuter),",
+          "    #\"Expanded Date_processed\" = Table.ExpandTableColumn(#\"Merged Queries\", \"Date_processed\", {\"ID\"}, {\"Year Quarter ID\"}),",
+          "    #\"Merged Queries1\" = Table.NestedJoin(#\"Expanded Date_processed\", {\"Area\"}, Area_raw, {\"Area\"}, \"Area_raw\", JoinKind.LeftOuter),",
+          "    #\"Expanded Area_processed\" = Table.ExpandTableColumn(#\"Merged Queries1\", \"Area_raw\", {\"ID\"}, {\"Area ID\"}),",
+          "    #\"Removed Other Columns1\" = Table.SelectColumns(#\"Expanded Area_processed\",{\"Year Quarter ID\", \"Area ID\", \"Amount\"})",
+          "in",
+          "    #\"Removed Other Columns1\""
+        ],
+        "kind": "m",
+        "lineageTag": "854ca308-7fbe-4bc4-9bd0-88101650d21f",
+        "queryGroup": "Processed"
+      },
+      {
+        "name": "Date_processed",
+        "annotations": [
+          {
+            "name": "PBI_NavigationStepName",
+            "value": "Navigation"
+          },
+          {
+            "name": "PBI_ResultType",
+            "value": "Table"
+          }
+        ],
+        "expression": [
+          "let",
+          "    Source = Table.SelectColumns(IC_raw, {\"Year\", \"Quarter\"}),",
+          "    Source1 = Table.SelectColumns(#\"IC Plan_raw\", {\"Year\", \"Quarter\"}),",
+          "    #\"Appended Query\" = Table.Combine({Source, Source1}),",
+          "    #\"Removed Duplicates\" = Table.Distinct(#\"Appended Query\"),",
+          "    #\"Added Custom\" = Table.AddColumn(#\"Removed Duplicates\", \"Year Quarter\", each Number.ToText([Year]) & \"-\" & [Quarter], type text),",
+          "    #\"Added Custom1\" = Table.AddColumn(#\"Added Custom\", \"Quarter End Date\", each Date.EndOfMonth(#date([Year], Number.From(Text.End([Quarter], 1)) * 3, 1)), type date),",
+          "    #\"Sorted Rows\" = Table.Sort(#\"Added Custom1\",{{\"Quarter End Date\", Order.Ascending}}),",
+          "    #\"Added Index\" = Table.AddIndexColumn(#\"Sorted Rows\", \"ID\", 1, 1, Int64.Type),",
+          "    #\"Changed Type\" = Table.TransformColumnTypes(#\"Added Index\",{{\"Year\", Int64.Type}, {\"Quarter\", type text}})",
+          "in",
+          "    #\"Changed Type\""
+        ],
+        "kind": "m",
+        "lineageTag": "baab85bd-e5c5-41a0-9518-f1c587c3eecf",
+        "queryGroup": "Processed"
+      },
+      {
+        "name": "Area Target Range_raw",
+        "annotations": [
+          {
+            "name": "PBI_NavigationStepName",
+            "value": "Navigation"
+          },
+          {
+            "name": "PBI_ResultType",
+            "value": "Table"
+          }
+        ],
+        "expression": [
+          "let",
+          "    Source = Excel.Workbook(File.Contents(paramFolderPath & \"\\Data\\Range of Area Sales Target.xlsx\"), null, true),",
+          "    _data_Table = Source{[Item=\"_data\",Kind=\"Table\"]}[Data],",
+          "    #\"Changed Type\" = Table.TransformColumnTypes(_data_Table,{{\"Min\", Int64.Type}, {\"Max\", Int64.Type}, {\"Year\", Int64.Type}, {\"ID\", Int64.Type}, {\"Quarter\", type text}, {\"Name\", type text}})",
+          "in",
+          "    #\"Changed Type\""
+        ],
+        "kind": "m",
+        "lineageTag": "1a82ef43-07e5-419d-9309-cfc76db380ab",
+        "queryGroup": "Staging"
+      },
+      {
+        "name": "Area Ach% Range_raw",
+        "annotations": [
+          {
+            "name": "PBI_NavigationStepName",
+            "value": "Navigation"
+          },
+          {
+            "name": "PBI_ResultType",
+            "value": "Table"
+          }
+        ],
+        "expression": [
+          "let",
+          "    Source = Excel.Workbook(File.Contents(paramFolderPath & \"\\Data\\Range of Area Ach%.xlsx\"), null, true),",
+          "    _data_Table = Source{[Item=\"_data\",Kind=\"Table\"]}[Data],",
+          "    #\"Changed Type\" = Table.TransformColumnTypes(_data_Table,{{\"ID\", Int64.Type}, {\"Min\", type number}, {\"Max\", type number}, {\"Name\", type text}})",
+          "in",
+          "    #\"Changed Type\""
+        ],
+        "kind": "m",
+        "lineageTag": "3ab35a8c-2ce7-46ef-a41e-316618e13cb0",
+        "queryGroup": "Staging"
+      },
+      {
+        "name": "Initial Ach% Range_raw",
+        "annotations": [
+          {
+            "name": "PBI_NavigationStepName",
+            "value": "Navigation"
+          },
+          {
+            "name": "PBI_ResultType",
+            "value": "Table"
+          }
+        ],
+        "expression": [
+          "let",
+          "    Source = Excel.Workbook(File.Contents(paramFolderPath & \"\\Data\\Range of Initial Ach%.xlsx\"), null, true),",
+          "    _data_Table = Source{[Item=\"_data\",Kind=\"Table\"]}[Data],",
+          "    #\"Changed Type\" = Table.TransformColumnTypes(_data_Table,{{\"ID\", Int64.Type}, {\"Min\", type number}, {\"Max\", type number}, {\"Name\", type text}})",
+          "in",
+          "    #\"Changed Type\""
+        ],
+        "kind": "m",
+        "lineageTag": "d72b80de-98e7-4041-8af0-422881799262",
+        "queryGroup": "Staging"
+      },
+      {
+        "name": "Length of Service Range_raw",
+        "annotations": [
+          {
+            "name": "PBI_NavigationStepName",
+            "value": "Navigation"
+          },
+          {
+            "name": "PBI_ResultType",
+            "value": "Table"
+          }
+        ],
+        "expression": [
+          "let",
+          "    Source = Excel.Workbook(File.Contents(paramFolderPath & \"\\Data\\Range of Length of Service.xlsx\"), null, true),",
+          "    _data_Table = Source{[Item=\"_data\",Kind=\"Table\"]}[Data],",
+          "    #\"Changed Type\" = Table.TransformColumnTypes(_data_Table,{{\"ID\", Int64.Type}, {\"Min\", Int64.Type}, {\"Max\", Int64.Type}, {\"Name\", type text}})",
+          "in",
+          "    #\"Changed Type\""
+        ],
+        "kind": "m",
+        "lineageTag": "b6bd9bcc-e0d0-42e5-be72-51487ce8308b",
+        "queryGroup": "Staging"
+      },
+      {
+        "name": "Net Growth Range_raw",
+        "annotations": [
+          {
+            "name": "PBI_NavigationStepName",
+            "value": "Navigation"
+          },
+          {
+            "name": "PBI_ResultType",
+            "value": "Table"
+          }
+        ],
+        "expression": [
+          "let",
+          "    Source = Excel.Workbook(File.Contents(paramFolderPath & \"\\Data\\Range of Net Growth.xlsx\"), null, true),",
+          "    _data_Table = Source{[Item=\"_data\",Kind=\"Table\"]}[Data],",
+          "    #\"Changed Type\" = Table.TransformColumnTypes(_data_Table,{{\"ID\", Int64.Type}, {\"Min\", Int64.Type}, {\"Max\", Int64.Type}, {\"Name\", type text}})",
+          "in",
+          "    #\"Changed Type\""
+        ],
+        "kind": "m",
+        "lineageTag": "ad34686f-156a-4a7c-9f02-41d9b68bc70f",
+        "queryGroup": "Staging"
+      },
+      {
+        "name": "IC2_processed",
+        "annotations": [
+          {
+            "name": "PBI_NavigationStepName",
+            "value": "Navigation"
+          },
+          {
+            "name": "PBI_ResultType",
+            "value": "Table"
+          }
+        ],
+        "description": "include info of various ranges",
+        "expression": [
+          "let",
+          "    Source = IC_raw,",
+          "    #\"Replaced Value\" = Table.ReplaceValue(Source,null,0,Replacer.ReplaceValue,{\"Area Target\", \"Area Actual\", \"Ach%\", \"Net Growth\", \"Initial Target\", \"Initial Target (Unit)\", \"Initial Actual\", \"Initial Actual (Unit)\", \"Initial Ach%\"}),",
+          "    #\"Added Custom\" = Table.AddColumn(#\"Replaced Value\", \"Position Code\", each if [Position] = \"REP\" then [Rep Position Code] else if [Position] = \"DM\" then [DM Position Code] else [RM Position Code]),",
+          "    #\"Added Custom1\" = Table.AddColumn(#\"Added Custom\", \"Name\", each if [Position] = \"REP\" then [Rep Name] else if [Position] = \"DM\" then [DM Name] else [RM Name]),",
+          "    #\"Merged Queries\" = Table.NestedJoin(#\"Added Custom1\", {\"Area\"}, Area_raw, {\"Area\"}, \"Area.1\", JoinKind.LeftOuter),",
+          "    #\"Expanded Area.1\" = Table.ExpandTableColumn(#\"Merged Queries\", \"Area.1\", {\"ID\"}, {\"Area ID\"}),",
+          "    #\"Merged Queries1\" = Table.NestedJoin(#\"Expanded Area.1\", {\"Position\"}, Position_raw, {\"Position\"}, \"Position_raw\", JoinKind.LeftOuter),",
+          "    #\"Expanded Position_processed\" = Table.ExpandTableColumn(#\"Merged Queries1\", \"Position_raw\", {\"ID\"}, {\"Position ID\"}),",
+          "    #\"Merged Queries2\" = Table.NestedJoin(#\"Expanded Position_processed\", {\"Year\", \"Quarter\"}, Date_processed, {\"Year\", \"Quarter\"}, \"Date_processed\", JoinKind.LeftOuter),",
+          "    #\"Expanded Date_processed\" = Table.ExpandTableColumn(#\"Merged Queries2\", \"Date_processed\", {\"ID\"}, {\"Year Quarter ID\"}),",
+          "    #\"Removed Columns1\" = Table.RemoveColumns(#\"Expanded Date_processed\",{\"RM Position Code\", \"RM Name\", \"DM Position Code\", \"DM Name\", \"Rep Position Code\", \"Rep Name\", \"Area\", \"Position\"}),",
+          "    #\"Unpivoted Other Columns\" = Table.UnpivotOtherColumns(#\"Removed Columns1\", {\"Year\", \"Quarter\",",
+          "\"Year Quarter ID\", \"Area ID\", \"Position ID\", \"Position Code\", \"PID\", \"Name\", \"Hire Date\", \"Exit Date\", \"Area Target\", \"Area Actual\", \"Ach%\", \"Net Growth\", \"Initial Target\", \"Initial Target (Unit)\", \"Initial Actual\", \"Initial Actual (Unit)\", \"Initial Ach%\"}, \"IC Type\", \"Amount\"),",
+          "    #\"Filtered Rows1\" = Table.SelectRows(#\"Unpivoted Other Columns\", each ([PID] <> null and [Amount] <> 0)),",
+          "    #\"Invoked Custom Function1\" = Table.AddColumn(#\"Filtered Rows1\", \"fxGetTargetRange\", each fxGetAreaTargetRange([Area Target], [Year], [Quarter])),",
+          "    #\"Expanded fxGetTargetRange\" = Table.ExpandTableColumn(#\"Invoked Custom Function1\", \"fxGetTargetRange\", {\"Name\", \"ID\"}, {\"Area Target Range\", \"Area Target Range ID\"}),",
+          "    #\"Invoked Custom Function2\" = Table.AddColumn(#\"Expanded fxGetTargetRange\", \"fxGetAch%Range\", each #\"fxGetAreaAch%Range\"([#\"Ach%\"])),",
+          "    #\"Expanded fxGetAch%Range\" = Table.ExpandTableColumn(#\"Invoked Custom Function2\", \"fxGetAch%Range\", {\"Name\", \"ID\"}, {\"Ach% Range\", \"Ach% Range ID\"}),",
+          "    #\"Invoked Custom Function\" = Table.AddColumn(#\"Expanded fxGetAch%Range\", \"fxGetInitialTargetRange\", each fxGetInitialTargetRange([#\"Initial Target (Unit)\"], [Year], [Quarter])),",
+          "    #\"Expanded fxGetInitialTargetRange\" = Table.ExpandTableColumn(#\"Invoked Custom Function\", \"fxGetInitialTargetRange\", {\"Name\", \"ID\"}, {\"Initial Target Range\", \"Initial Target Range ID\"}),",
+          "    #\"Invoked Custom Function3\" = Table.AddColumn(#\"Expanded fxGetInitialTargetRange\", \"fxGetInitialAch%Range\", each #\"fxGetInitialAch%Range\"([#\"Initial Ach%\"])),",
+          "    #\"Expanded fxGetInitialAch%Range\" = Table.ExpandTableColumn(#\"Invoked Custom Function3\", \"fxGetInitialAch%Range\", {\"Name\", \"ID\"}, {\"Initial Ach% Range\", \"Initial Ach% Range ID\"}),",
+          "    #\"Invoked Custom Function4\" = Table.AddColumn(#\"Expanded fxGetInitialAch%Range\", \"fxGetNetGrowthRange\", each fxGetNetGrowthRange([Net Growth])),",
+          "    #\"Expanded fxGetNetGrowthRange\" = Table.ExpandTableColumn(#\"Invoked Custom Function4\", \"fxGetNetGrowthRange\", {\"Name\", \"ID\"}, {\"Net Growth Range\", \"Net Growth Range ID\"}),",
+          "    #\"Invoked Custom Function5\" = Table.AddColumn(#\"Expanded fxGetNetGrowthRange\", \"fxGetICRange\", each fxGetICRange([IC Type], [Amount])),",
+          "    #\"Expanded fxGetICRange\" = Table.ExpandTableColumn(#\"Invoked Custom Function5\", \"fxGetICRange\", {\"Name\", \"ID\"}, {\"IC Range\", \"IC Range ID\"}),",
+          "    #\"Changed Type\" = Table.TransformColumnTypes(#\"Expanded fxGetICRange\",{{\"Year\", Int64.Type}, {\"Quarter\", type text}, {\"PID\", Int64.Type}, {\"Hire Date\", type date}, {\"Exit Date\", type date}, {\"Area Target\", Currency.Type}, {\"Area Actual\", Currency.Type}, {\"Net Growth\", Currency.Type}, {\"Initial Target\", Currency.Type}, {\"Initial Actual\", Currency.Type}, {\"Amount\", Currency.Type}, {\"IC Type\", type text}, {\"Year Quarter ID\", Int64.Type}, {\"Position ID\", Int64.Type}, {\"Area ID\", Int64.Type}, {\"Name\", type text}, {\"Position Code\", type text}, {\"Initial Ach%\", Percentage.Type}, {\"Initial Actual (Unit)\", Int64.Type}, {\"Initial Target (Unit)\", Int64.Type}, {\"Area Target Range ID\", Int64.Type}, {\"Ach% Range ID\", Int64.Type}, {\"Initial Ach% Range ID\", Int64.Type}, {\"Net Growth Range ID\", Int64.Type}, {\"IC Range ID\", Int64.Type}, {\"IC Range\", type text}, {\"Net Growth Range\", type text}, {\"Initial Ach% Range\", type text}, {\"Ach% Range\", type text}, {\"Area Target Range\", type text}, {\"Ach%\", Percentage.Type}, {\"Initial Target Range\", type text}, {\"Initial Target Range ID\", Int64.Type}}),",
+          "    #\"Split Column by Delimiter\" = Table.SplitColumn(#\"Changed Type\", \"IC Type\", Splitter.SplitTextByEachDelimiter({\" \"}, QuoteStyle.Csv, true), {\"IC Type\", \"IC Type.2\"}),",
+          "    #\"Removed Other Columns\" = Table.SelectColumns(#\"Split Column by Delimiter\",{\"Year Quarter ID\", \"Area ID\", \"Position ID\", \"Position Code\", \"PID\", \"Name\", \"Hire Date\", \"Exit Date\", \"Area Target\", \"Area Target Range\", \"Area Target Range ID\", \"Area Actual\", \"Ach%\", \"Ach% Range\", \"Ach% Range ID\", \"Net Growth\", \"Net Growth Range\", \"Net Growth Range ID\", \"Initial Target\", \"Initial Target Range\", \"Initial Target Range ID\",\"Initial Target (Unit)\", \"Initial Actual\", \"Initial Actual (Unit)\", \"Initial Ach%\", \"Initial Ach% Range\", \"Initial Ach% Range ID\", \"IC Type\", \"Amount\", \"IC Range\", \"IC Range ID\"}),",
+          "    #\"Merged Queries3\" = Table.NestedJoin(#\"Removed Other Columns\", {\"IC Type\"}, #\"IC Type_raw\", {\"IC Type\"}, \"IC Type_raw\", JoinKind.LeftOuter),",
+          "    #\"Expanded IC Type_raw\" = Table.ExpandTableColumn(#\"Merged Queries3\", \"IC Type_raw\", {\"ID\"}, {\"IC Type ID\"})",
+          "in",
+          "    #\"Expanded IC Type_raw\""
+        ],
+        "kind": "m",
+        "lineageTag": "f0b745d8-cb2c-4a6e-a567-b783ba017dc6",
+        "queryGroup": "Processed"
+      },
+      {
+        "name": "Range of IC_raw",
+        "annotations": [
+          {
+            "name": "PBI_NavigationStepName",
+            "value": "Navigation"
+          },
+          {
+            "name": "PBI_ResultType",
+            "value": "Table"
+          }
+        ],
+        "expression": [
+          "let",
+          "    Source = Excel.Workbook(File.Contents(paramFolderPath & \"\\Data\\Range of IC.xlsx\"), null, true),",
+          "    _data_Table = Source{[Item=\"_data\",Kind=\"Table\"]}[Data],",
+          "    #\"Changed Type\" = Table.TransformColumnTypes(_data_Table,{{\"IC Type\", type text}, {\"Name\", type text}, {\"Remarks\", type text}, {\"ID\", Int64.Type}, {\"Min\", Int64.Type}, {\"Max\", Int64.Type}})",
+          "in",
+          "    #\"Changed Type\""
+        ],
+        "kind": "m",
+        "lineageTag": "8893f4a7-f74e-4ae2-bffd-44be78abcc8a",
+        "queryGroup": "Staging"
+      },
+      {
+        "name": "paramICType",
+        "annotations": [
+          {
+            "name": "PBI_ResultType",
+            "value": "Text"
+          }
+        ],
+        "expression": "\"Total IC\" meta [IsParameterQuery=true, Type=\"Any\", IsParameterQueryRequired=true]",
+        "kind": "m",
+        "lineageTag": "e11c9593-298f-4e95-832a-244dc94fbaca",
+        "queryGroup": "Parameters"
+      },
+      {
+        "name": "paramNumber",
+        "annotations": [
+          {
+            "name": "PBI_ResultType",
+            "value": "Number"
+          }
+        ],
+        "expression": "100 meta [IsParameterQuery=true, Type=\"Any\", IsParameterQueryRequired=true]",
+        "kind": "m",
+        "lineageTag": "6b619b97-8777-4364-88cb-398a69d58ab0",
+        "queryGroup": "Parameters"
+      },
+      {
+        "name": "paramYear",
+        "annotations": [
+          {
+            "name": "PBI_ResultType",
+            "value": "Number"
+          }
+        ],
+        "expression": "2023 meta [IsParameterQuery=true, Type=\"Any\", IsParameterQueryRequired=true]",
+        "kind": "m",
+        "lineageTag": "4c497260-5db8-4865-ae31-087dd68a90c4",
+        "queryGroup": "Parameters"
+      },
+      {
+        "name": "paramQuarter",
+        "annotations": [
+          {
+            "name": "PBI_ResultType",
+            "value": "Text"
+          }
+        ],
+        "expression": "\"Q3\" meta [IsParameterQuery=true, Type=\"Any\", IsParameterQueryRequired=true]",
+        "kind": "m",
+        "lineageTag": "0b97b31a-0f1f-4075-99ad-40365d941f03",
+        "queryGroup": "Parameters"
+      },
+      {
+        "name": "fxGetICRange",
+        "annotations": [
+          {
+            "name": "PBI_ResultType",
+            "value": "Function"
+          }
+        ],
+        "expression": [
+          "let",
+          "    Source = (paramICType as any, paramNumber as any) => let",
+          "    Source = #\"Range of IC_raw\",",
+          "    #\"Filtered Rows\" = Table.SelectRows(Source, each ([IC Type] = paramICType) and ([Min] <= paramNumber) and ([Max] > paramNumber)),",
+          "    #\"Removed Other Columns\" = Table.SelectColumns(#\"Filtered Rows\",{\"Name\", \"ID\"})",
+          "in",
+          "    #\"Removed Other Columns\"",
+          "in",
+          "    Source"
+        ],
+        "kind": "m",
+        "lineageTag": "1162aee4-a35e-4378-8e80-0f9cd2a52510",
+        "mAttributes": "[ FunctionQueryBinding = \"{\"\"exemplarFormulaName\"\":\"\"Get IC Ranges\"\"}\" ]",
+        "queryGroup": "Functions\\fxGetICRange"
+      },
+      {
+        "name": "fxGetAreaTargetRange",
+        "annotations": [
+          {
+            "name": "PBI_ResultType",
+            "value": "Function"
+          },
+          {
+            "name": "PBI_NavigationStepName",
+            "value": "Navigation"
+          }
+        ],
+        "expression": [
+          "let",
+          "    Source = (paramNumber as any, paramYear as any, paramQuarter as any) => let",
+          "    Source = #\"Area Target Range_raw\",",
+          "    #\"Filtered Rows\" = Table.SelectRows(Source, each ([Year] = paramYear) and ([Quarter] = paramQuarter) and ([Min] <= paramNumber) and ([Max] > paramNumber)),",
+          "    #\"Removed Other Columns\" = Table.SelectColumns(#\"Filtered Rows\",{\"Name\", \"ID\"})",
+          "in",
+          "    #\"Removed Other Columns\"",
+          "in",
+          "    Source"
+        ],
+        "kind": "m",
+        "lineageTag": "2e57fa8c-bd8b-4f00-a983-cb182f1cb9fd",
+        "mAttributes": "[ FunctionQueryBinding = \"{\"\"exemplarFormulaName\"\":\"\"Get Area Target Range\"\"}\" ]",
+        "queryGroup": "Functions\\fxGetAreaTargetRange"
+      },
+      {
+        "name": "Get Other Ranges",
+        "annotations": [
+          {
+            "name": "PBI_NavigationStepName",
+            "value": "Navigation"
+          },
+          {
+            "name": "PBI_ResultType",
+            "value": "Table"
+          }
+        ],
+        "expression": [
+          "let",
+          "    Source = Excel.Workbook(File.Contents(paramFolderPath & \"\\Data\\Range of Net Growth.xlsx\"), null, true),",
+          "    _data_Table = Source{[Item=\"_data\",Kind=\"Table\"]}[Data],",
+          "    #\"Changed Type\" = Table.TransformColumnTypes(_data_Table,{{\"ID\", Int64.Type}, {\"Min\", Int64.Type}, {\"Max\", Int64.Type}, {\"Name\", type text}}),",
+          "    #\"Filtered Rows\" = Table.SelectRows(#\"Changed Type\", each ([Min] <= paramNumber) and ([Max] > paramNumber)),",
+          "    #\"Removed Other Columns\" = Table.SelectColumns(#\"Filtered Rows\",{\"Name\", \"ID\"})",
+          "in",
+          "    #\"Removed Other Columns\""
+        ],
+        "kind": "m",
+        "lineageTag": "47ab183e-7481-4280-ba07-9aa6cf746330",
+        "queryGroup": "Functions\\fxGetOtherRange"
+      },
+      {
+        "name": "fxGetOtherRange",
+        "annotations": [
+          {
+            "name": "PBI_ResultType",
+            "value": "Function"
+          },
+          {
+            "name": "PBI_NavigationStepName",
+            "value": "Navigation"
+          }
+        ],
+        "expression": [
+          "let",
+          "    Source = (paramNumber as any, paramFolderPath as text) => let",
+          "    Source = Excel.Workbook(File.Contents(paramFolderPath & \"\\Data\\Range of Net Growth.xlsx\"), null, true),",
+          "    _data_Table = Source{[Item=\"_data\",Kind=\"Table\"]}[Data],",
+          "    #\"Changed Type\" = Table.TransformColumnTypes(_data_Table,{{\"ID\", Int64.Type}, {\"Min\", Int64.Type}, {\"Max\", Int64.Type}, {\"Name\", type text}}),",
+          "    #\"Filtered Rows\" = Table.SelectRows(#\"Changed Type\", each ([Min] <= paramNumber) and ([Max] > paramNumber)),",
+          "    #\"Removed Other Columns\" = Table.SelectColumns(#\"Filtered Rows\",{\"Name\", \"ID\"})",
+          "in",
+          "    #\"Removed Other Columns\"",
+          "in",
+          "    Source"
+        ],
+        "kind": "m",
+        "lineageTag": "7c391a81-b56b-4059-b722-9da9321b7384",
+        "mAttributes": "[ FunctionQueryBinding = \"{\"\"exemplarFormulaName\"\":\"\"Get Other Ranges\"\"}\" ]",
+        "queryGroup": "Functions\\fxGetOtherRange"
+      },
+      {
+        "name": "Get Length of Service Range",
+        "annotations": [
+          {
+            "name": "PBI_NavigationStepName",
+            "value": "Navigation"
+          },
+          {
+            "name": "PBI_ResultType",
+            "value": "Table"
+          }
+        ],
+        "expression": [
+          "let",
+          "    Source = #\"Length of Service Range_raw\",",
+          "    #\"Filtered Rows\" = Table.SelectRows(Source, each ([Min] <= paramLengthOfService and [Max] > paramLengthOfService)),",
+          "    #\"Removed Other Columns\" = Table.SelectColumns(#\"Filtered Rows\",{\"Name\", \"ID\"})",
+          "in",
+          "    #\"Removed Other Columns\""
+        ],
+        "kind": "m",
+        "lineageTag": "fe95412a-9702-4323-b70d-93caaf2ba3c7",
+        "queryGroup": "Functions\\fxGetLengthOfServiceRange"
+      },
+      {
+        "name": "paramLengthOfService",
+        "annotations": [
+          {
+            "name": "PBI_ResultType",
+            "value": "Number"
+          }
+        ],
+        "expression": "4 meta [IsParameterQuery=true, Type=\"Any\", IsParameterQueryRequired=true]",
+        "kind": "m",
+        "lineageTag": "66a78bb8-130b-4286-b101-59b5067bc05f",
+        "queryGroup": "Parameters"
+      },
+      {
+        "name": "paramPercent",
+        "annotations": [
+          {
+            "name": "PBI_ResultType",
+            "value": "Number"
+          }
+        ],
+        "expression": "0.95 meta [IsParameterQuery=true, Type=\"Any\", IsParameterQueryRequired=true]",
+        "kind": "m",
+        "lineageTag": "8b25c291-17db-4bf9-b366-e8addbfbedd7",
+        "queryGroup": "Parameters"
+      },
+      {
+        "name": "fxGetLengthOfServiceRange",
+        "annotations": [
+          {
+            "name": "PBI_ResultType",
+            "value": "Function"
+          }
+        ],
+        "expression": [
+          "let",
+          "    Source = (paramLengthOfService as any) => let",
+          "    Source = #\"Length of Service Range_raw\",",
+          "    #\"Filtered Rows\" = Table.SelectRows(Source, each ([Min] <= paramLengthOfService and [Max] > paramLengthOfService)),",
+          "    #\"Removed Other Columns\" = Table.SelectColumns(#\"Filtered Rows\",{\"Name\", \"ID\"})",
+          "in",
+          "    #\"Removed Other Columns\"",
+          "in",
+          "    Source"
+        ],
+        "kind": "m",
+        "lineageTag": "b30cc1dd-a76b-4ce4-a071-37657851e3fe",
+        "mAttributes": "[ FunctionQueryBinding = \"{\"\"exemplarFormulaName\"\":\"\"Get Length of Service Range\"\"}\" ]",
+        "queryGroup": "Functions\\fxGetLengthOfServiceRange"
+      },
+      {
+        "name": "fxGetAreaAch%Range",
+        "annotations": [
+          {
+            "name": "PBI_ResultType",
+            "value": "Function"
+          }
+        ],
+        "expression": [
+          "let",
+          "    Source = (paramPercent as any) => let",
+          "    Source = #\"Area Ach% Range_raw\",",
+          "    #\"Filtered Rows\" = Table.SelectRows(Source, each ([Min] <= paramPercent and [Max] > paramPercent)),",
+          "    #\"Removed Other Columns\" = Table.SelectColumns(#\"Filtered Rows\",{\"Name\", \"ID\"})",
+          "in",
+          "    #\"Removed Other Columns\"",
+          "in",
+          "    Source"
+        ],
+        "kind": "m",
+        "lineageTag": "6dc2827c-93eb-4bcd-bc02-561a97d9fde9",
+        "mAttributes": "[ FunctionQueryBinding = \"{\"\"exemplarFormulaName\"\":\"\"Get Area Ach% Range\"\"}\" ]",
+        "queryGroup": "Functions\\fxGetAreaAch%Range"
+      },
+      {
+        "name": "fxGetInitialAch%Range",
+        "annotations": [
+          {
+            "name": "PBI_ResultType",
+            "value": "Function"
+          }
+        ],
+        "expression": [
+          "let",
+          "    Source = (paramPercent as any) => let",
+          "    Source = #\"Initial Ach% Range_raw\",",
+          "    #\"Filtered Rows\" = Table.SelectRows(Source, each ([Min] <= paramPercent and [Max] > paramPercent)),",
+          "    #\"Removed Other Columns\" = Table.SelectColumns(#\"Filtered Rows\",{\"Name\", \"ID\"})",
+          "in",
+          "    #\"Removed Other Columns\"",
+          "in",
+          "    Source"
+        ],
+        "kind": "m",
+        "lineageTag": "8000e1a9-f3f1-4947-8b8e-e863f84086db",
+        "mAttributes": "[ FunctionQueryBinding = \"{\"\"exemplarFormulaName\"\":\"\"Get Initial Ach% Range\"\"}\" ]",
+        "queryGroup": "Functions\\fxGetInitialAch%Range"
+      },
+      {
+        "name": "fxGetNetGrowthRange",
+        "annotations": [
+          {
+            "name": "PBI_ResultType",
+            "value": "Function"
+          }
+        ],
+        "expression": [
+          "let",
+          "    Source = (paramNumber as any) => let",
+          "    Source = #\"Net Growth Range_raw\",",
+          "    #\"Filtered Rows\" = Table.SelectRows(Source, each ([Min] <= paramNumber and [Max] > paramNumber)),",
+          "    #\"Removed Other Columns\" = Table.SelectColumns(#\"Filtered Rows\",{\"Name\", \"ID\"})",
+          "in",
+          "    #\"Removed Other Columns\"",
+          "in",
+          "    Source"
+        ],
+        "kind": "m",
+        "lineageTag": "986170f5-eb8c-46a2-83b4-cbf3153bdc8f",
+        "mAttributes": "[ FunctionQueryBinding = \"{\"\"exemplarFormulaName\"\":\"\"Get Net Growth IC Range\"\"}\" ]",
+        "queryGroup": "Functions\\fxGetNetGrowthRange"
+      },
+      {
+        "name": "Area Target Range",
+        "annotations": [
+          {
+            "name": "PBI_ResultType",
+            "value": "Table"
+          }
+        ],
+        "expression": [
+          "let",
+          "    Source = #\"Area Target Range_raw\"",
+          "in",
+          "    Source"
+        ],
+        "kind": "m",
+        "lineageTag": "c6902cb5-a3c6-4fd5-8e39-02476928dff9",
+        "queryGroup": "Processed\\Luk"
+      },
+      {
+        "name": "Area Ach% Range",
+        "annotations": [
+          {
+            "name": "PBI_ResultType",
+            "value": "Table"
+          }
+        ],
+        "expression": [
+          "let",
+          "    Source = #\"Area Ach% Range_raw\"",
+          "in",
+          "    Source"
+        ],
+        "kind": "m",
+        "lineageTag": "13cdeb3a-527c-43cc-b591-1b6d37542882",
+        "queryGroup": "Processed\\Luk"
+      },
+      {
+        "name": "Initial Ach% Range",
+        "annotations": [
+          {
+            "name": "PBI_ResultType",
+            "value": "Table"
+          }
+        ],
+        "expression": [
+          "let",
+          "    Source = #\"Initial Ach% Range_raw\"",
+          "in",
+          "    Source"
+        ],
+        "kind": "m",
+        "lineageTag": "448f7e43-595d-4bb6-94e3-b5dc33808678",
+        "queryGroup": "Processed\\Luk"
+      },
+      {
+        "name": "Net Growth Range",
+        "annotations": [
+          {
+            "name": "PBI_NavigationStepName",
+            "value": "Navigation"
+          },
+          {
+            "name": "PBI_ResultType",
+            "value": "Table"
+          }
+        ],
+        "expression": [
+          "let",
+          "    Source = #\"Net Growth Range_raw\"",
+          "in",
+          "    Source"
+        ],
+        "kind": "m",
+        "lineageTag": "e91e014f-8ebe-4fc8-b7ad-627bc88033de",
+        "queryGroup": "Processed\\Luk"
+      },
+      {
+        "name": "Get IC Ranges",
+        "annotations": [
+          {
+            "name": "PBI_NavigationStepName",
+            "value": "Navigation"
+          },
+          {
+            "name": "PBI_ResultType",
+            "value": "Table"
+          }
+        ],
+        "expression": [
+          "let",
+          "    Source = #\"Range of IC_raw\",",
+          "    #\"Filtered Rows\" = Table.SelectRows(Source, each ([IC Type] = paramICType) and ([Min] <= paramNumber) and ([Max] > paramNumber)),",
+          "    #\"Removed Other Columns\" = Table.SelectColumns(#\"Filtered Rows\",{\"Name\", \"ID\"})",
+          "in",
+          "    #\"Removed Other Columns\""
+        ],
+        "kind": "m",
+        "lineageTag": "d845239a-e1b9-49d1-b100-559034cd7452",
+        "queryGroup": "Functions\\fxGetICRange"
+      },
+      {
+        "name": "Get Area Target Range",
+        "annotations": [
+          {
+            "name": "PBI_NavigationStepName",
+            "value": "Navigation"
+          },
+          {
+            "name": "PBI_ResultType",
+            "value": "Table"
+          }
+        ],
+        "expression": [
+          "let",
+          "    Source = #\"Area Target Range_raw\",",
+          "    #\"Filtered Rows\" = Table.SelectRows(Source, each ([Year] = paramYear) and ([Quarter] = paramQuarter) and ([Min] <= paramNumber) and ([Max] > paramNumber)),",
+          "    #\"Removed Other Columns\" = Table.SelectColumns(#\"Filtered Rows\",{\"Name\", \"ID\"})",
+          "in",
+          "    #\"Removed Other Columns\""
+        ],
+        "kind": "m",
+        "lineageTag": "121fb4e9-f680-4ba1-b7f5-bbda530e5b7a",
+        "queryGroup": "Functions\\fxGetAreaTargetRange"
+      },
+      {
+        "name": "Get Area Ach% Range",
+        "annotations": [
+          {
+            "name": "PBI_NavigationStepName",
+            "value": "Navigation"
+          },
+          {
+            "name": "PBI_ResultType",
+            "value": "Table"
+          }
+        ],
+        "expression": [
+          "let",
+          "    Source = #\"Area Ach% Range_raw\",",
+          "    #\"Filtered Rows\" = Table.SelectRows(Source, each ([Min] <= paramPercent and [Max] > paramPercent)),",
+          "    #\"Removed Other Columns\" = Table.SelectColumns(#\"Filtered Rows\",{\"Name\", \"ID\"})",
+          "in",
+          "    #\"Removed Other Columns\""
+        ],
+        "kind": "m",
+        "lineageTag": "ed3d5179-ab7d-4cbe-b63c-2514a4235cf7",
+        "queryGroup": "Functions\\fxGetAreaAch%Range"
+      },
+      {
+        "name": "Get Initial Ach% Range",
+        "annotations": [
+          {
+            "name": "PBI_NavigationStepName",
+            "value": "Navigation"
+          },
+          {
+            "name": "PBI_ResultType",
+            "value": "Table"
+          }
+        ],
+        "expression": [
+          "let",
+          "    Source = #\"Initial Ach% Range_raw\",",
+          "    #\"Filtered Rows\" = Table.SelectRows(Source, each ([Min] <= paramPercent and [Max] > paramPercent)),",
+          "    #\"Removed Other Columns\" = Table.SelectColumns(#\"Filtered Rows\",{\"Name\", \"ID\"})",
+          "in",
+          "    #\"Removed Other Columns\""
+        ],
+        "kind": "m",
+        "lineageTag": "67fa9f6f-9f64-4716-bfbf-f37b83e23439",
+        "queryGroup": "Functions\\fxGetInitialAch%Range"
+      },
+      {
+        "name": "Get Net Growth IC Range",
+        "annotations": [
+          {
+            "name": "PBI_NavigationStepName",
+            "value": "Navigation"
+          },
+          {
+            "name": "PBI_ResultType",
+            "value": "Table"
+          }
+        ],
+        "expression": [
+          "let",
+          "    Source = #\"Net Growth Range_raw\",",
+          "    #\"Filtered Rows\" = Table.SelectRows(Source, each ([Min] <= paramNumber and [Max] > paramNumber)),",
+          "    #\"Removed Other Columns\" = Table.SelectColumns(#\"Filtered Rows\",{\"Name\", \"ID\"})",
+          "in",
+          "    #\"Removed Other Columns\""
+        ],
+        "kind": "m",
+        "lineageTag": "1c7c70f0-a368-4948-a04e-35c3580fd50d",
+        "queryGroup": "Functions\\fxGetNetGrowthRange"
+      },
+      {
+        "name": "Position Detail_processed",
+        "annotations": [
+          {
+            "name": "PBI_NavigationStepName",
+            "value": "Navigation"
+          },
+          {
+            "name": "PBI_ResultType",
+            "value": "Table"
+          }
+        ],
+        "expression": [
+          "let",
+          "    Source = IC_raw,",
+          "    #\"Added Custom\" = Table.AddColumn(Source, \"Position Code\", each if [Position] = \"REP\" then [Rep Position Code] else if [Position] = \"DM\" then [DM Position Code] else [RM Position Code]),",
+          "    #\"Added Custom1\" = Table.AddColumn(#\"Added Custom\", \"Name\", each if [Position] = \"REP\" then [Rep Name] else if [Position] = \"DM\" then [DM Name] else [RM Name]),",
+          "    #\"Merged Queries\" = Table.NestedJoin(#\"Added Custom1\", {\"Area\"}, Area_raw, {\"Area\"}, \"Area.1\", JoinKind.LeftOuter),",
+          "    #\"Expanded Area.1\" = Table.ExpandTableColumn(#\"Merged Queries\", \"Area.1\", {\"ID\"}, {\"Area ID\"}),",
+          "    #\"Merged Queries1\" = Table.NestedJoin(#\"Expanded Area.1\", {\"Position\"}, Position_raw, {\"Position\"}, \"Position_raw\", JoinKind.LeftOuter),",
+          "    #\"Expanded Position_processed\" = Table.ExpandTableColumn(#\"Merged Queries1\", \"Position_raw\", {\"ID\"}, {\"Position ID\"}),",
+          "    #\"Merged Queries2\" = Table.NestedJoin(#\"Expanded Position_processed\", {\"Year\", \"Quarter\"}, Date_processed, {\"Year\", \"Quarter\"}, \"Date_processed\", JoinKind.LeftOuter),",
+          "    #\"Expanded Date_processed\" = Table.ExpandTableColumn(#\"Merged Queries2\", \"Date_processed\", {\"ID\"}, {\"Year Quarter ID\"}),",
+          "    #\"Removed Other Columns1\" = Table.SelectColumns(#\"Expanded Date_processed\",{\"Year Quarter ID\", \"Area ID\", \"Position ID\", \"Position Code\", \"PID\", \"Name\"}),",
+          "    #\"Changed Type\" = Table.TransformColumnTypes(#\"Removed Other Columns1\",{{\"PID\", type text}, {\"Name\", type text}, {\"Position Code\", type text}}),",
+          "    #\"Removed Duplicates\" = Table.Distinct(#\"Changed Type\")",
+          "in",
+          "    #\"Removed Duplicates\""
+        ],
+        "kind": "m",
+        "lineageTag": "605bf7ad-61a2-416d-b518-45141b5ef8e5",
+        "queryGroup": "Processed"
+      },
+      {
+        "name": "Initial Target Range_raw",
+        "annotations": [
+          {
+            "name": "PBI_NavigationStepName",
+            "value": "Navigation"
+          },
+          {
+            "name": "PBI_ResultType",
+            "value": "Table"
+          }
+        ],
+        "expression": [
+          "let",
+          "    Source = Excel.Workbook(File.Contents(paramFolderPath & \"\\Data\\Range of Initial Sales Target.xlsx\"), null, true),",
+          "    _data_Table = Source{[Item=\"_data\",Kind=\"Table\"]}[Data],",
+          "    #\"Changed Type\" = Table.TransformColumnTypes(_data_Table,{{\"Min\", Int64.Type}, {\"Max\", Int64.Type}, {\"Year\", Int64.Type}, {\"ID\", Int64.Type}, {\"Quarter\", type text}, {\"Name\", type text}})",
+          "in",
+          "    #\"Changed Type\""
+        ],
+        "kind": "m",
+        "lineageTag": "a3802b89-1a11-4bed-8500-6eb4ad7bf05c",
+        "queryGroup": "Staging"
+      },
+      {
+        "name": "Get Initial Target Range",
+        "annotations": [
+          {
+            "name": "PBI_NavigationStepName",
+            "value": "Navigation"
+          },
+          {
+            "name": "PBI_ResultType",
+            "value": "Table"
+          }
+        ],
+        "expression": [
+          "let",
+          "    Source = #\"Initial Target Range_raw\",",
+          "    #\"Filtered Rows\" = Table.SelectRows(Source, each ([Year] = paramYear) and ([Quarter] = paramQuarter) and ([Min] <= paramNumber) and ([Max] > paramNumber)),",
+          "    #\"Removed Other Columns\" = Table.SelectColumns(#\"Filtered Rows\",{\"Name\", \"ID\"})",
+          "in",
+          "    #\"Removed Other Columns\""
+        ],
+        "kind": "m",
+        "lineageTag": "b821812c-221d-48d5-9ecd-b67204252aec",
+        "queryGroup": "Functions\\fxGetInitialTargetRange"
+      },
+      {
+        "name": "fxGetInitialTargetRange",
+        "annotations": [
+          {
+            "name": "PBI_NavigationStepName",
+            "value": "Navigation"
+          },
+          {
+            "name": "PBI_ResultType",
+            "value": "Function"
+          }
+        ],
+        "expression": [
+          "let",
+          "    Source = (paramNumber as any, paramYear as any, paramQuarter as any) => let",
+          "    Source = #\"Initial Target Range_raw\",",
+          "    #\"Filtered Rows\" = Table.SelectRows(Source, each ([Year] = paramYear) and ([Quarter] = paramQuarter) and ([Min] <= paramNumber) and ([Max] > paramNumber)),",
+          "    #\"Removed Other Columns\" = Table.SelectColumns(#\"Filtered Rows\",{\"Name\", \"ID\"})",
+          "in",
+          "    #\"Removed Other Columns\"",
+          "in",
+          "    Source"
+        ],
+        "kind": "m",
+        "lineageTag": "ba8cb5b8-b54b-4615-a61f-374dd20f787e",
+        "mAttributes": "[ FunctionQueryBinding = \"{\"\"exemplarFormulaName\"\":\"\"Get Initial Target Range\"\"}\" ]",
+        "queryGroup": "Functions\\fxGetInitialTargetRange"
+      },
+      {
+        "name": "paramFolderPath",
+        "annotations": [
+          {
+            "name": "PBI_ResultType",
+            "value": "Text"
+          }
+        ],
+        "expression": "\"D:\\Power BI Projects\\ALK\" meta [IsParameterQuery=true, Type=\"Text\", IsParameterQueryRequired=true]",
+        "kind": "m",
+        "lineageTag": "2fb4e8e6-b772-483c-bf1a-52e9eb5f1e81",
+        "queryGroup": "Parameters"
+      },
+      {
+        "name": "IC Type_raw",
+        "annotations": [
+          {
+            "name": "PBI_NavigationStepName",
+            "value": "Navigation"
+          },
+          {
+            "name": "PBI_ResultType",
+            "value": "Table"
+          }
+        ],
+        "expression": [
+          "let",
+          "    Source = Excel.Workbook(File.Contents(\"D:\\Power BI Projects\\ALK\\Data\\IC Type.xlsx\"), null, true),",
+          "    _data_Table = Source{[Item=\"_data\",Kind=\"Table\"]}[Data],",
+          "    #\"Changed Type\" = Table.TransformColumnTypes(_data_Table,{{\"IC Type\", type text}, {\"ID\", Int64.Type}})",
+          "in",
+          "    #\"Changed Type\""
+        ],
+        "kind": "m",
+        "lineageTag": "54032547-e18a-4d23-a68b-dc9dfdd492a1",
+        "queryGroup": "Staging"
+      }
+    ],
+    "queryGroups": [
+      {
+        "annotations": [
+          {
+            "name": "PBI_QueryGroupOrder",
+            "value": "2"
+          }
+        ],
+        "folder": "Staging"
+      },
+      {
+        "annotations": [
+          {
+            "name": "PBI_QueryGroupOrder",
+            "value": "3"
+          }
+        ],
+        "folder": "Processed"
+      },
+      {
+        "annotations": [
+          {
+            "name": "PBI_QueryGroupOrder",
+            "value": "4"
+          }
+        ],
+        "folder": "Load"
+      },
+      {
+        "annotations": [
+          {
+            "name": "PBI_QueryGroupOrder",
+            "value": "0"
+          }
+        ],
+        "folder": "Load\\Fact"
+      },
+      {
+        "annotations": [
+          {
+            "name": "PBI_QueryGroupOrder",
+            "value": "1"
+          }
+        ],
+        "folder": "Load\\Dim"
+      },
+      {
+        "annotations": [
+          {
+            "name": "PBI_QueryGroupOrder",
+            "value": "0"
+          }
+        ],
+        "folder": "Functions\\fxGetICRange"
+      },
+      {
+        "annotations": [
+          {
+            "name": "PBI_QueryGroupOrder",
+            "value": "1"
+          }
+        ],
+        "folder": "Functions"
+      },
+      {
+        "annotations": [
+          {
+            "name": "PBI_QueryGroupOrder",
+            "value": "3"
+          }
+        ],
+        "folder": "Functions\\fxGetOtherRange"
+      },
+      {
+        "annotations": [
+          {
+            "name": "PBI_QueryGroupOrder",
+            "value": "0"
+          }
+        ],
+        "folder": "Parameters"
+      },
+      {
+        "annotations": [
+          {
+            "name": "PBI_QueryGroupOrder",
+            "value": "4"
+          }
+        ],
+        "folder": "Functions\\fxGetLengthOfServiceRange"
+      },
+      {
+        "annotations": [
+          {
+            "name": "PBI_QueryGroupOrder",
+            "value": "5"
+          }
+        ],
+        "folder": "Functions\\fxGetAreaAch%Range"
+      },
+      {
+        "annotations": [
+          {
+            "name": "PBI_QueryGroupOrder",
+            "value": "6"
+          }
+        ],
+        "folder": "Functions\\fxGetInitialAch%Range"
+      },
+      {
+        "annotations": [
+          {
+            "name": "PBI_QueryGroupOrder",
+            "value": "7"
+          }
+        ],
+        "folder": "Functions\\fxGetNetGrowthRange"
+      },
+      {
+        "annotations": [
+          {
+            "name": "PBI_QueryGroupOrder",
+            "value": "0"
+          }
+        ],
+        "folder": "Processed\\Luk"
+      },
+      {
+        "annotations": [
+          {
+            "name": "PBI_QueryGroupOrder",
+            "value": "15"
+          }
+        ],
+        "folder": "Archive"
+      },
+      {
+        "annotations": [
+          {
+            "name": "PBI_QueryGroupOrder",
+            "value": "1"
+          }
+        ],
+        "folder": "Functions\\fxGetAreaTargetRange"
+      },
+      {
+        "annotations": [
+          {
+            "name": "PBI_QueryGroupOrder",
+            "value": "2"
+          }
+        ],
+        "folder": "Functions\\fxGetInitialTargetRange"
+      }
+    ],
+    "relationships": [
+      {
+        "name": "af5d1450-d892-4427-bc23-af828eb50a6b",
+        "fromColumn": "Area ID",
+        "fromTable": "IC",
+        "toColumn": "ID",
+        "toTable": "Area"
+      },
+      {
+        "name": "0286e090-3b6c-4a09-9867-27384c425f3f",
+        "fromColumn": "Area ID",
+        "fromTable": "IC Plan",
+        "toColumn": "ID",
+        "toTable": "Area"
+      },
+      {
+        "name": "bf42b589-f3d5-405b-85b0-abc5dd54bf83",
+        "fromColumn": "Year Quarter ID",
+        "fromTable": "IC",
+        "toColumn": "ID",
+        "toTable": "Date"
+      },
+      {
+        "name": "ebf5d7d3-e3ce-4c3f-8bb7-ab7fb7c223fa",
+        "fromColumn": "Position ID",
+        "fromTable": "IC",
+        "toColumn": "ID",
+        "toTable": "Position"
+      },
+      {
+        "name": "5a4d2096-a0e6-44e2-a1dc-276907dd80b2",
+        "fromColumn": "Year Quarter ID",
+        "fromTable": "IC Plan",
+        "toColumn": "ID",
+        "toTable": "Date"
+      },
+      {
+        "name": "a832f4bc-b2f8-47c3-ac29-a4c6ccc86ce2",
+        "fromColumn": "Hire Date",
+        "fromTable": "IC",
+        "toColumn": "Date",
+        "toTable": "Hire Date"
+      },
+      {
+        "name": "9d35dcc6-b8b3-4c95-9146-177799e4be8f",
+        "fromColumn": "Year Quarter ID",
+        "fromTable": "Position Detail",
+        "toColumn": "ID",
+        "toTable": "Date"
+      },
+      {
+        "name": "209d263f-9c20-4813-9abf-ad9b187e10e3",
+        "fromColumn": "Area ID",
+        "fromTable": "Position Detail",
+        "toColumn": "ID",
+        "toTable": "Area"
+      },
+      {
+        "name": "947e61ff-76a2-471f-ba3e-6164b5da309c",
+        "fromColumn": "Position ID",
+        "fromTable": "Position Detail",
+        "toColumn": "ID",
+        "toTable": "Position"
+      },
+      {
+        "name": "72986813-2415-43c2-9046-d5abf4e3135e",
+        "fromColumn": "Year Quarter ID",
+        "fromTable": "IC2",
+        "toColumn": "ID",
+        "toTable": "Date"
+      },
+      {
+        "name": "826ea13e-4991-445b-9d48-e9f2b87e1323",
+        "fromColumn": "Position ID",
+        "fromTable": "IC2",
+        "toColumn": "ID",
+        "toTable": "Position"
+      },
+      {
+        "name": "c9ce7a00-6c13-4532-87ad-83087f0a8c42",
+        "fromColumn": "Area ID",
+        "fromTable": "IC2",
+        "toColumn": "ID",
+        "toTable": "Area"
+      }
+    ],
+    "sourceQueryCulture": "en-US",
+    "tables": [
+      {
+        "name": "IC",
+        "annotations": [
+          {
+            "name": "PBI_ResultType",
+            "value": "Table"
+          },
+          {
+            "name": "PBI_NavigationStepName",
+            "value": "Navigation"
+          }
+        ],
+        "changedProperties": [
+          {
+            "property": "IsHidden"
+          }
+        ],
+        "columns": [
+          {
+            "name": "Year Quarter ID",
+            "annotations": [
+              {
+                "name": "SummarizationSetBy",
+                "value": "Automatic"
+              }
+            ],
+            "changedProperties": [
+              {
+                "property": "IsHidden"
+              }
+            ],
+            "dataType": "int64",
+            "formatString": "0",
+            "isHidden": true,
+            "lineageTag": "42797775-f896-4a28-87be-f9a9cd9e8024",
+            "sourceColumn": "Year Quarter ID",
+            "summarizeBy": "none"
+          },
+          {
+            "name": "Area ID",
+            "annotations": [
+              {
+                "name": "SummarizationSetBy",
+                "value": "Automatic"
+              }
+            ],
+            "changedProperties": [
+              {
+                "property": "IsHidden"
+              }
+            ],
+            "dataType": "int64",
+            "formatString": "0",
+            "isHidden": true,
+            "lineageTag": "43a0157c-857d-4502-b3b2-603734287ea6",
+            "sourceColumn": "Area ID",
+            "summarizeBy": "none"
+          },
+          {
+            "name": "Position ID",
+            "annotations": [
+              {
+                "name": "SummarizationSetBy",
+                "value": "Automatic"
+              }
+            ],
+            "changedProperties": [
+              {
+                "property": "IsHidden"
+              }
+            ],
+            "dataType": "int64",
+            "formatString": "0",
+            "isHidden": true,
+            "lineageTag": "1208cb87-ae1c-4498-8269-cc560cf8f3a7",
+            "sourceColumn": "Position ID",
+            "summarizeBy": "none"
+          },
+          {
+            "name": "Position Code",
+            "annotations": [
+              {
+                "name": "SummarizationSetBy",
+                "value": "Automatic"
+              }
+            ],
+            "changedProperties": [
+              {
+                "property": "IsHidden"
+              }
+            ],
+            "dataType": "string",
+            "isHidden": true,
+            "lineageTag": "a7d461e0-e026-4819-935e-de8ca5cd1530",
+            "sourceColumn": "Position Code",
+            "summarizeBy": "none"
+          },
+          {
+            "name": "PID",
+            "annotations": [
+              {
+                "name": "SummarizationSetBy",
+                "value": "User"
+              }
+            ],
+            "changedProperties": [
+              {
+                "property": "IsHidden"
+              }
+            ],
+            "dataType": "int64",
+            "formatString": "0",
+            "isHidden": true,
+            "lineageTag": "b5600e87-59ad-4cc0-8d70-ec08c8ece8d0",
+            "sourceColumn": "PID",
+            "summarizeBy": "none"
+          },
+          {
+            "name": "Name",
+            "annotations": [
+              {
+                "name": "SummarizationSetBy",
+                "value": "Automatic"
+              }
+            ],
+            "changedProperties": [
+              {
+                "property": "IsHidden"
+              }
+            ],
+            "dataType": "string",
+            "isHidden": true,
+            "lineageTag": "96544d7c-f78e-429b-85d1-ed94aa42a9b6",
+            "sourceColumn": "Name",
+            "summarizeBy": "none"
+          },
+          {
+            "name": "Hire Date",
+            "annotations": [
+              {
+                "name": "SummarizationSetBy",
+                "value": "Automatic"
+              },
+              {
+                "name": "UnderlyingDateTimeDataType",
+                "value": "Date"
+              }
+            ],
+            "changedProperties": [
+              {
+                "property": "IsHidden"
+              }
+            ],
+            "dataType": "dateTime",
+            "formatString": "Short Date",
+            "isHidden": true,
+            "lineageTag": "17ffde85-936c-492f-a1d6-6bfdd3d6263e",
+            "sourceColumn": "Hire Date",
+            "summarizeBy": "none"
+          },
+          {
+            "name": "Exit Date",
+            "annotations": [
+              {
+                "name": "SummarizationSetBy",
+                "value": "Automatic"
+              },
+              {
+                "name": "UnderlyingDateTimeDataType",
+                "value": "Date"
+              }
+            ],
+            "changedProperties": [
+              {
+                "property": "IsHidden"
+              }
+            ],
+            "dataType": "dateTime",
+            "formatString": "Short Date",
+            "isHidden": true,
+            "lineageTag": "0f362432-2349-4074-8ef3-f443cf424165",
+            "sourceColumn": "Exit Date",
+            "summarizeBy": "none"
+          },
+          {
+            "name": "Area Target",
+            "annotations": [
+              {
+                "name": "SummarizationSetBy",
+                "value": "Automatic"
+              },
+              {
+                "name": "PBI_FormatHint",
+                "value": "{\"isDecimal\":true}"
+              }
+            ],
+            "changedProperties": [
+              {
+                "property": "IsHidden"
+              }
+            ],
+            "dataType": "decimal",
+            "formatString": "#,0",
+            "isHidden": true,
+            "lineageTag": "50cef762-ac36-4cc9-bd8e-c848b5b21edd",
+            "sourceColumn": "Area Target",
+            "summarizeBy": "sum"
+          },
+          {
+            "name": "Area Actual",
+            "annotations": [
+              {
+                "name": "SummarizationSetBy",
+                "value": "Automatic"
+              },
+              {
+                "name": "PBI_FormatHint",
+                "value": "{\"isDecimal\":true}"
+              }
+            ],
+            "changedProperties": [
+              {
+                "property": "IsHidden"
+              }
+            ],
+            "dataType": "decimal",
+            "formatString": "#,0",
+            "isHidden": true,
+            "lineageTag": "e1c109d4-a45e-4ff4-a5d8-b97173363b7a",
+            "sourceColumn": "Area Actual",
+            "summarizeBy": "sum"
+          },
+          {
+            "name": "Net Growth",
+            "annotations": [
+              {
+                "name": "SummarizationSetBy",
+                "value": "Automatic"
+              },
+              {
+                "name": "PBI_FormatHint",
+                "value": "{\"isDecimal\":true}"
+              }
+            ],
+            "changedProperties": [
+              {
+                "property": "IsHidden"
+              }
+            ],
+            "dataType": "decimal",
+            "formatString": "#,0",
+            "isHidden": true,
+            "lineageTag": "2484c2fc-30aa-4e48-8550-a1ab366e062c",
+            "sourceColumn": "Net Growth",
+            "summarizeBy": "sum"
+          },
+          {
+            "name": "Initial Target",
+            "annotations": [
+              {
+                "name": "SummarizationSetBy",
+                "value": "Automatic"
+              },
+              {
+                "name": "PBI_FormatHint",
+                "value": "{\"isDecimal\":true}"
+              }
+            ],
+            "changedProperties": [
+              {
+                "property": "IsHidden"
+              }
+            ],
+            "dataType": "decimal",
+            "formatString": "#,0",
+            "isHidden": true,
+            "lineageTag": "3d4b4a84-cac3-46c4-83b9-faa2a97ce92c",
+            "sourceColumn": "Initial Target",
+            "summarizeBy": "sum"
+          },
+          {
+            "name": "Initial Target (Unit)",
+            "annotations": [
+              {
+                "name": "SummarizationSetBy",
+                "value": "Automatic"
+              }
+            ],
+            "changedProperties": [
+              {
+                "property": "IsHidden"
+              }
+            ],
+            "dataType": "int64",
+            "formatString": "0",
+            "isHidden": true,
+            "lineageTag": "224f1551-7c82-4334-94a0-3a3950b7770c",
+            "sourceColumn": "Initial Target (Unit)",
+            "summarizeBy": "sum"
+          },
+          {
+            "name": "Initial Actual",
+            "annotations": [
+              {
+                "name": "SummarizationSetBy",
+                "value": "Automatic"
+              },
+              {
+                "name": "PBI_FormatHint",
+                "value": "{\"isDecimal\":true}"
+              }
+            ],
+            "changedProperties": [
+              {
+                "property": "IsHidden"
+              }
+            ],
+            "dataType": "decimal",
+            "formatString": "#,0",
+            "isHidden": true,
+            "lineageTag": "cc57554c-8503-4807-a228-6a1e187c9014",
+            "sourceColumn": "Initial Actual",
+            "summarizeBy": "sum"
+          },
+          {
+            "name": "Initial Actual (Unit)",
+            "annotations": [
+              {
+                "name": "SummarizationSetBy",
+                "value": "Automatic"
+              }
+            ],
+            "changedProperties": [
+              {
+                "property": "IsHidden"
+              }
+            ],
+            "dataType": "int64",
+            "formatString": "0",
+            "isHidden": true,
+            "lineageTag": "dab9d668-56f2-4c7a-a9c4-c0302ca8c342",
+            "sourceColumn": "Initial Actual (Unit)",
+            "summarizeBy": "sum"
+          },
+          {
+            "name": "Initial Ach%",
+            "annotations": [
+              {
+                "name": "SummarizationSetBy",
+                "value": "User"
+              }
+            ],
+            "changedProperties": [
+              {
+                "property": "IsHidden"
+              }
+            ],
+            "dataType": "double",
+            "formatString": "0%;-0%;0%",
+            "isHidden": true,
+            "lineageTag": "7f090248-1752-4641-96d4-d65e00454d42",
+            "sourceColumn": "Initial Ach%",
+            "summarizeBy": "none"
+          },
+          {
+            "name": "IC Type",
+            "annotations": [
+              {
+                "name": "SummarizationSetBy",
+                "value": "Automatic"
+              }
+            ],
+            "changedProperties": [
+              {
+                "property": "IsHidden"
+              },
+              {
+                "property": "SortByColumn"
+              }
+            ],
+            "dataType": "string",
+            "isHidden": true,
+            "lineageTag": "d76e1334-e616-4312-aba7-acf4f724c54f",
+            "sortByColumn": "IC Type ID",
+            "sourceColumn": "IC Type",
+            "summarizeBy": "none"
+          },
+          {
+            "name": "Amount",
+            "annotations": [
+              {
+                "name": "SummarizationSetBy",
+                "value": "Automatic"
+              },
+              {
+                "name": "PBI_FormatHint",
+                "value": "{\"isDecimal\":true}"
+              }
+            ],
+            "changedProperties": [
+              {
+                "property": "IsHidden"
+              }
+            ],
+            "dataType": "decimal",
+            "formatString": "#,0",
+            "isHidden": true,
+            "lineageTag": "4ea01210-5870-4856-801e-36babc5c1e7d",
+            "sourceColumn": "Amount",
+            "summarizeBy": "sum"
+          },
+          {
+            "name": "Ach%",
+            "annotations": [
+              {
+                "name": "SummarizationSetBy",
+                "value": "User"
+              }
+            ],
+            "changedProperties": [
+              {
+                "property": "IsHidden"
+              }
+            ],
+            "dataType": "double",
+            "formatString": "0%;-0%;0%",
+            "isHidden": true,
+            "lineageTag": "75a01cc8-affc-4ed8-a269-32b70f201160",
+            "sourceColumn": "Ach%",
+            "summarizeBy": "none"
+          },
+          {
+            "name": "IC Type ID",
+            "annotations": [
+              {
+                "name": "SummarizationSetBy",
+                "value": "Automatic"
+              }
+            ],
+            "changedProperties": [
+              {
+                "property": "IsHidden"
+              }
+            ],
+            "dataType": "int64",
+            "formatString": "0",
+            "isHidden": true,
+            "lineageTag": "9a5429b1-2091-4d54-bc31-796ee384491b",
+            "sourceColumn": "IC Type ID",
+            "summarizeBy": "count"
+          }
+        ],
+        "isHidden": true,
+        "lineageTag": "5b22e0bb-9546-4632-9a15-c09917389887",
+        "partitions": [
+          {
+            "name": "IC",
+            "mode": "import",
+            "queryGroup": "Load\\Fact",
+            "source": {
+              "expression": [
+                "let",
+                "    Source = IC_processed",
+                "in",
+                "    Source"
+              ],
+              "type": "m"
+            }
+          }
+        ]
+      },
+      {
+        "name": "IC Plan",
+        "annotations": [
+          {
+            "name": "PBI_ResultType",
+            "value": "Table"
+          }
+        ],
+        "columns": [
+          {
+            "name": "Year Quarter ID",
+            "annotations": [
+              {
+                "name": "SummarizationSetBy",
+                "value": "Automatic"
+              }
+            ],
+            "changedProperties": [
+              {
+                "property": "IsHidden"
+              }
+            ],
+            "dataType": "int64",
+            "formatString": "0",
+            "isHidden": true,
+            "lineageTag": "596809a3-e075-4aeb-ab9b-32c666dcfbd3",
+            "sourceColumn": "Year Quarter ID",
+            "summarizeBy": "none"
+          },
+          {
+            "name": "Area ID",
+            "annotations": [
+              {
+                "name": "SummarizationSetBy",
+                "value": "Automatic"
+              }
+            ],
+            "changedProperties": [
+              {
+                "property": "IsHidden"
+              }
+            ],
+            "dataType": "int64",
+            "formatString": "0",
+            "isHidden": true,
+            "lineageTag": "99f67ac5-3a36-4038-9609-e8ff2c45b412",
+            "sourceColumn": "Area ID",
+            "summarizeBy": "none"
+          },
+          {
+            "name": "Amount",
+            "annotations": [
+              {
+                "name": "SummarizationSetBy",
+                "value": "Automatic"
+              },
+              {
+                "name": "PBI_FormatHint",
+                "value": "{\"isDecimal\":true}"
+              }
+            ],
+            "changedProperties": [
+              {
+                "property": "IsHidden"
+              }
+            ],
+            "dataType": "decimal",
+            "formatString": "#,0",
+            "isHidden": true,
+            "lineageTag": "61b4e769-880c-4242-90bc-2799a48de4a2",
+            "sourceColumn": "Amount",
+            "summarizeBy": "sum"
+          }
+        ],
+        "lineageTag": "00d603f0-3390-4a4c-ba89-0d43be6ed897",
+        "partitions": [
+          {
+            "name": "IC Plan",
+            "mode": "import",
+            "queryGroup": "Load\\Fact",
+            "source": {
+              "expression": [
+                "let",
+                "    Source = #\"IC Plan_processed\"",
+                "in",
+                "    Source"
+              ],
+              "type": "m"
+            }
+          }
+        ]
+      },
+      {
+        "name": "Area",
+        "annotations": [
+          {
+            "name": "PBI_ResultType",
+            "value": "Table"
+          }
+        ],
+        "columns": [
+          {
+            "name": "ID",
+            "annotations": [
+              {
+                "name": "SummarizationSetBy",
+                "value": "Automatic"
+              }
+            ],
+            "changedProperties": [
+              {
+                "property": "IsHidden"
+              }
+            ],
+            "dataType": "int64",
+            "formatString": "0",
+            "isHidden": true,
+            "lineageTag": "dc69a3c1-2a2c-4ae2-b6ae-c72f77165aee",
+            "sourceColumn": "ID",
+            "summarizeBy": "none"
+          },
+          {
+            "name": "Area",
+            "annotations": [
+              {
+                "name": "SummarizationSetBy",
+                "value": "Automatic"
+              }
+            ],
+            "changedProperties": [
+              {
+                "property": "SortByColumn"
+              }
+            ],
+            "dataType": "string",
+            "lineageTag": "dfaa989b-a25f-4b16-9f48-9f1ab9addebf",
+            "sortByColumn": "ID",
+            "sourceColumn": "Area",
+            "summarizeBy": "none"
+          }
+        ],
+        "lineageTag": "c3ef5899-e93e-49a6-ae53-38712bcf3c78",
+        "partitions": [
+          {
+            "name": "Area",
+            "mode": "import",
+            "queryGroup": "Load\\Dim",
+            "source": {
+              "expression": [
+                "let",
+                "    Source = Area_raw",
+                "in",
+                "    Source"
+              ],
+              "type": "m"
+            }
+          }
+        ]
+      },
+      {
+        "name": "Position",
+        "annotations": [
+          {
+            "name": "PBI_ResultType",
+            "value": "Table"
+          }
+        ],
+        "columns": [
+          {
+            "name": "ID",
+            "annotations": [
+              {
+                "name": "SummarizationSetBy",
+                "value": "Automatic"
+              }
+            ],
+            "changedProperties": [
+              {
+                "property": "IsHidden"
+              }
+            ],
+            "dataType": "int64",
+            "formatString": "0",
+            "isHidden": true,
+            "lineageTag": "d2eff23a-acb7-4eea-8203-f318a1407310",
+            "sourceColumn": "ID",
+            "summarizeBy": "none"
+          },
+          {
+            "name": "Position",
+            "annotations": [
+              {
+                "name": "SummarizationSetBy",
+                "value": "Automatic"
+              }
+            ],
+            "changedProperties": [
+              {
+                "property": "SortByColumn"
+              }
+            ],
+            "dataType": "string",
+            "lineageTag": "bf660be3-213a-4efe-9cfb-a18de0df0b32",
+            "sortByColumn": "ID",
+            "sourceColumn": "Position",
+            "summarizeBy": "none"
+          }
+        ],
+        "lineageTag": "ac2cf8b0-6318-4f3d-b78b-97065e7e436e",
+        "partitions": [
+          {
+            "name": "Position",
+            "mode": "import",
+            "queryGroup": "Load\\Dim",
+            "source": {
+              "expression": [
+                "let",
+                "    Source = Position_raw",
+                "in",
+                "    Source"
+              ],
+              "type": "m"
+            }
+          }
+        ]
+      },
+      {
+        "name": "Date",
+        "annotations": [
+          {
+            "name": "PBI_ResultType",
+            "value": "Table"
+          }
+        ],
+        "columns": [
+          {
+            "name": "Year",
+            "annotations": [
+              {
+                "name": "SummarizationSetBy",
+                "value": "User"
+              }
+            ],
+            "dataType": "int64",
+            "formatString": "0",
+            "lineageTag": "61d46470-c02f-41dc-a462-33ca9096bfc8",
+            "sourceColumn": "Year",
+            "summarizeBy": "none"
+          },
+          {
+            "name": "Quarter",
+            "annotations": [
+              {
+                "name": "SummarizationSetBy",
+                "value": "Automatic"
+              }
+            ],
+            "dataType": "string",
+            "lineageTag": "09501cc4-f585-4857-a2a8-5f9623bdfbad",
+            "sourceColumn": "Quarter",
+            "summarizeBy": "none"
+          },
+          {
+            "name": "Year Quarter",
+            "annotations": [
+              {
+                "name": "SummarizationSetBy",
+                "value": "Automatic"
+              }
+            ],
+            "changedProperties": [
+              {
+                "property": "SortByColumn"
+              }
+            ],
+            "dataType": "string",
+            "lineageTag": "e46bd616-566c-4f21-9fd6-99e0aeac7824",
+            "sortByColumn": "ID",
+            "sourceColumn": "Year Quarter",
+            "summarizeBy": "none"
+          },
+          {
+            "name": "Quarter End Date",
+            "annotations": [
+              {
+                "name": "SummarizationSetBy",
+                "value": "Automatic"
+              },
+              {
+                "name": "UnderlyingDateTimeDataType",
+                "value": "Date"
+              }
+            ],
+            "changedProperties": [
+              {
+                "property": "IsHidden"
+              }
+            ],
+            "dataType": "dateTime",
+            "formatString": "Long Date",
+            "isHidden": true,
+            "lineageTag": "65048296-1809-43b9-b237-b01db35bdde8",
+            "sourceColumn": "Quarter End Date",
+            "summarizeBy": "none"
+          },
+          {
+            "name": "ID",
+            "annotations": [
+              {
+                "name": "SummarizationSetBy",
+                "value": "Automatic"
+              }
+            ],
+            "changedProperties": [
+              {
+                "property": "IsHidden"
+              }
+            ],
+            "dataType": "int64",
+            "formatString": "0",
+            "isHidden": true,
+            "lineageTag": "32de5238-3df0-4db0-9871-bd2dbabc0628",
+            "sourceColumn": "ID",
+            "summarizeBy": "none"
+          },
+          {
+            "name": "Year Quarter Label",
+            "annotations": [
+              {
+                "name": "SummarizationSetBy",
+                "value": "Automatic"
+              }
+            ],
+            "changedProperties": [
+              {
+                "property": "SortByColumn"
+              },
+              {
+                "property": "IsHidden"
+              }
+            ],
+            "dataType": "string",
+            "expression": [
+              "",
+              "VAR _DataDate = ",
+              "    MAXX ( ALL ( IC ), IC[Year Quarter ID] )",
+              "VAR _Result = ",
+              "    IF ( 'Date'[ID] = _DataDate, \"Current\", 'Date'[Year Quarter] )",
+              "RETURN",
+              "    _Result"
+            ],
+            "isDataTypeInferred": true,
+            "isHidden": true,
+            "lineageTag": "47461f44-0b59-4a70-8765-aacc57195f61",
+            "sortByColumn": "ID",
+            "summarizeBy": "none",
+            "type": "calculated"
+          },
+          {
+            "name": "Year Label",
+            "annotations": [
+              {
+                "name": "SummarizationSetBy",
+                "value": "Automatic"
+              }
+            ],
+            "changedProperties": [
+              {
+                "property": "IsHidden"
+              },
+              {
+                "property": "SortByColumn"
+              }
+            ],
+            "dataType": "string",
+            "expression": [
+              "",
+              "VAR _Year = YEAR ( [Date of Data Date] )",
+              "VAR _Result = ",
+              "    IF ( 'Date'[Year] = _Year, \"Current\", FORMAT ( 'Date'[Year], \"@\") )",
+              "RETURN",
+              "    _Result"
+            ],
+            "isDataTypeInferred": true,
+            "isHidden": true,
+            "lineageTag": "38d86430-9490-4f83-bda9-44ac80ed3900",
+            "sortByColumn": "Year",
+            "summarizeBy": "none",
+            "type": "calculated"
+          },
+          {
+            "name": "Quarter In Scope (Y/N)",
+            "annotations": [
+              {
+                "name": "SummarizationSetBy",
+                "value": "Automatic"
+              }
+            ],
+            "changedProperties": [
+              {
+                "property": "IsHidden"
+              }
+            ],
+            "dataType": "int64",
+            "expression": [
+              "",
+              "IF ( ",
+              "    CALCULATE ( DISTINCTCOUNT ( IC[Year Quarter ID] ) ) > 0,",
+              "    1,",
+              "    0",
+              ")"
+            ],
+            "formatString": "0",
+            "isDataTypeInferred": true,
+            "isHidden": true,
+            "lineageTag": "bd7aaef4-123c-4856-b431-47edba8b4000",
+            "summarizeBy": "sum",
+            "type": "calculated"
+          }
+        ],
+        "lineageTag": "afaed34d-9ae5-44b9-8192-5279e8f3cc6d",
+        "partitions": [
+          {
+            "name": "Date",
+            "mode": "import",
+            "queryGroup": "Load\\Dim",
+            "source": {
+              "expression": [
+                "let",
+                "    Source = Date_processed",
+                "in",
+                "    Source"
+              ],
+              "type": "m"
+            }
+          }
+        ]
+      },
+      {
+        "name": "ME",
+        "annotations": [
+          {
+            "name": "PBI_ResultType",
+            "value": "Table"
+          }
+        ],
+        "columns": [
+          {
+            "name": "Column1",
+            "annotations": [
+              {
+                "name": "SummarizationSetBy",
+                "value": "Automatic"
+              }
+            ],
+            "changedProperties": [
+              {
+                "property": "IsHidden"
+              }
+            ],
+            "dataType": "string",
+            "isHidden": true,
+            "lineageTag": "baba1c3c-8b97-449a-aa3e-ac0cc2dd0b25",
+            "sourceColumn": "Column1",
+            "summarizeBy": "none"
+          }
+        ],
+        "lineageTag": "8fed50ce-363a-4a7b-b1b5-756a1cca63ab",
+        "measures": [
+          {
+            "name": "IC",
+            "annotations": [
+              {
+                "name": "PBI_FormatHint",
+                "value": "{\"isDecimal\":true}"
+              }
+            ],
+            "displayFolder": "IC",
+            "expression": "SUM ( 'IC'[Amount] )",
+            "formatString": "#,0",
+            "lineageTag": "29a85203-dd0f-40ae-8fbf-2551186b67bc"
+          },
+          {
+            "name": "IC Plan",
+            "displayFolder": "IC",
+            "expression": "SUM ( 'IC Plan'[Amount] )",
+            "formatString": "#,0",
+            "lineageTag": "fb0f2251-0403-482c-a109-8b8c3e0e3e2c"
+          },
+          {
+            "name": "Total HC",
+            "changedProperties": [
+              {
+                "property": "IsHidden"
+              }
+            ],
+            "displayFolder": "HC",
+            "expression": "DISTINCTCOUNT ( 'Position Detail'[Position Code] )",
+            "formatString": "0",
+            "lineageTag": "6be9edbe-7f19-499f-b177-4d649c06d7cc"
+          },
+          {
+            "name": "Available HC",
+            "displayFolder": "HC",
+            "expression": [
+              "",
+              "// the calc is based on position code rather than pid, because a PID may handle multiple position codes",
+              "CALCULATE ( ",
+              "    [Total HC],",
+              "    'Position Detail'[PID] <> BLANK ()",
+              ")"
+            ],
+            "formatString": "0",
+            "lineageTag": "767f0ab6-2c6c-4103-aee5-42f30002235d"
+          },
+          {
+            "name": "Eligible HC",
+            "displayFolder": "HC",
+            "expression": [
+              "",
+              "DISTINCTCOUNT ( IC[Position Code] )"
+            ],
+            "formatString": "0",
+            "lineageTag": "bc8401b0-8b42-4363-b0dd-c6dfa3b74b8d"
+          },
+          {
+            "name": "Eligible HC%",
+            "displayFolder": "HC",
+            "expression": [
+              "",
+              "DIVIDE ( [Eligible HC], [Available HC] )"
+            ],
+            "formatString": "0.0%;-0.0%;0.0%",
+            "lineageTag": "65bfc2db-0a39-4492-ad01-1531141dcca2"
+          },
+          {
+            "name": "Non-Eligible HC",
+            "changedProperties": [
+              {
+                "property": "IsHidden"
+              }
+            ],
+            "displayFolder": "HC",
+            "expression": [
+              "",
+              "[Available HC] - [Eligible HC]"
+            ],
+            "formatString": "0",
+            "isHidden": true,
+            "lineageTag": "9586ed68-7379-44be-9c7f-3cc88aac1936"
+          },
+          {
+            "name": "Report Date",
+            "displayFolder": "View",
+            "expression": [
+              "",
+              "SELECTEDVALUE ( ",
+              "    'Date'[Year Quarter],  ",
+              "   [Data Date]",
+              ")"
+            ],
+            "lineageTag": "41cd2531-f869-4624-9814-1310de3588e8"
+          },
+          {
+            "name": "Report Date Label",
+            "displayFolder": "View",
+            "expression": [
+              "",
+              "\"Report Period: \" & [Report Date]"
+            ],
+            "lineageTag": "a897d225-7a66-4d44-ad20-6691146a5d81"
+          },
+          {
+            "name": "IC Actual % Plan",
+            "displayFolder": "IC",
+            "expression": [
+              "",
+              "DIVIDE ( [IC], [IC Plan] )"
+            ],
+            "formatString": "0.0%;-0.0%;0.0%",
+            "lineageTag": "4562b7ca-8426-4f5e-9d9a-c080afdef750"
+          },
+          {
+            "name": "Average IC per HC",
+            "displayFolder": "IC",
+            "expression": [
+              "",
+              "DIVIDE ( [IC], [Available HC] )"
+            ],
+            "formatString": "#,0",
+            "lineageTag": "002a68e4-2540-407c-864d-94de123d24cc"
+          },
+          {
+            "name": "Data Date",
+            "displayFolder": "View",
+            "expression": [
+              "",
+              "MAXX ( ",
+              "    SUMMARIZE ( ALL ( IC ),'Date'[Year Quarter] ),",
+              "    'Date'[Year Quarter]",
+              ")"
+            ],
+            "lineageTag": "c4fc23a0-65df-475c-91ad-d09302c10d8f"
+          },
+          {
+            "name": "Date of Data Date",
+            "displayFolder": "View",
+            "expression": [
+              "",
+              "MAXX ( ",
+              "    SUMMARIZE ( ",
+              "        ALL ( IC ),",
+              "        'Date'[Quarter End Date] ",
+              "    ),",
+              "    'Date'[Quarter End Date]",
+              ") "
+            ],
+            "formatString": "General Date",
+            "lineageTag": "eebb7afd-6b86-45ea-ad13-1bd56267fed6"
+          },
+          {
+            "name": "IC % of VT",
+            "displayFolder": "IC",
+            "expression": [
+              "",
+              "VAR _Current = [IC]",
+              "VAR _VT = ",
+              "    CALCULATE ( [IC], ALLSELECTED ( IC[IC Type], IC[IC Type ID] ) )",
+              "VAR _Result = ",
+              "    DIVIDE ( _Current, _VT )",
+              "RETURN",
+              "    _Result"
+            ],
+            "formatString": "0.0%;-0.0%;0.0%",
+            "lineageTag": "47f9d980-43c3-4d89-a3a7-c70589d2e18b"
+          },
+          {
+            "name": "Label of Eligible HC",
+            "displayFolder": "View",
+            "expression": "[Eligible HC] & \" (\" & FORMAT ( [Eligible HC%], \"0.0%\" ) & \")\"",
+            "lineageTag": "f0196b73-84d7-4557-8962-7f0d92123d8a"
+          },
+          {
+            "name": "Year of Data Date",
+            "displayFolder": "View",
+            "expression": [
+              "",
+              "SELECTEDVALUE ( 'Date'[Year], YEAR ( [Date of Data Date] ) )"
+            ],
+            "formatString": "0",
+            "lineageTag": "489cce30-373e-4b85-9c50-f0874d99d371"
+          },
+          {
+            "name": "Ach Eligible HC",
+            "displayFolder": "HC",
+            "expression": [
+              "",
+              "CALCULATE ( ",
+              "    [Eligible HC],",
+              "    IC[IC Type] = \"Ach\"",
+              ")"
+            ],
+            "formatString": "0",
+            "lineageTag": "888982ff-c161-4808-9676-0d54eea6ca95"
+          },
+          {
+            "name": "Ach Eligible HC%",
+            "displayFolder": "HC",
+            "expression": [
+              "",
+              "CALCULATE ( [Eligible HC%], IC[IC Type] = \"Ach\" )"
+            ],
+            "formatString": "0.0%;-0.0%;0.0%",
+            "lineageTag": "e299aad9-9929-4cd9-957e-9dc1705585ee"
+          },
+          {
+            "name": "Average IC per REP",
+            "displayFolder": "IC",
+            "expression": [
+              "",
+              "CALCULATE ( [Average IC per HC], Position[ID] = 1 )"
+            ],
+            "formatString": "#,0",
+            "lineageTag": "a3f364c1-0bb8-4e02-9e4b-05f0e879bd4f"
+          },
+          {
+            "name": "IC (for Range Analysis)",
+            "annotations": [
+              {
+                "name": "PBI_FormatHint",
+                "value": "{\"isDecimal\":true}"
+              }
+            ],
+            "changedProperties": [
+              {
+                "property": "IsHidden"
+              }
+            ],
+            "displayFolder": "IC",
+            "expression": [
+              "",
+              "SUM ( IC2[Amount] )"
+            ],
+            "formatString": "#,0",
+            "lineageTag": "12abf8fb-b3b4-4e92-9653-761f37a0a6b6"
+          },
+          {
+            "name": "Eligible HC (for Range Analysis)",
+            "changedProperties": [
+              {
+                "property": "IsHidden"
+              }
+            ],
+            "displayFolder": "HC",
+            "expression": [
+              "",
+              "DISTINCTCOUNT ( IC2[Position Code] )"
+            ],
+            "formatString": "0",
+            "lineageTag": "6d2c538c-55ab-4de5-a45a-44653e3c0abd"
+          },
+          {
+            "name": "Ruler5",
+            "changedProperties": [
+              {
+                "property": "IsHidden"
+              }
+            ],
+            "displayFolder": "View\\Rulers",
+            "expression": "REPT ( \"M\", 5 )",
+            "isHidden": true,
+            "lineageTag": "6851904b-d99e-4f6e-864c-e926c937399f"
+          },
+          {
+            "name": "Ruler4",
+            "changedProperties": [
+              {
+                "property": "IsHidden"
+              }
+            ],
+            "displayFolder": "View\\Rulers",
+            "expression": "REPT ( \"M\", 4 )",
+            "isHidden": true,
+            "lineageTag": "a7fb801d-fb4a-4cec-ac8e-819ef33888fe"
+          },
+          {
+            "name": "TP",
+            "changedProperties": [
+              {
+                "property": "IsHidden"
+              }
+            ],
+            "displayFolder": "View",
+            "expression": "\"RGBA(255,255,255,0)\"",
+            "isHidden": true,
+            "lineageTag": "96006770-2c40-468d-890b-0993a88efe5f"
+          },
+          {
+            "name": "IC %GT (for Range Analysis)",
+            "changedProperties": [
+              {
+                "property": "IsHidden"
+              }
+            ],
+            "displayFolder": "IC",
+            "expression": [
+              "",
+              "DIVIDE (",
+              "    [IC (for Range Analysis)], ",
+              "    CALCULATE(",
+              "        [IC (for Range Analysis)],",
+              "        ALLSELECTED (",
+              "            // 'IC2'[Area Target Range],",
+              "            // 'IC2'[Area Target Range ID],",
+              "            // 'IC2'[Ach% Range],",
+              "            // 'IC2'[Ach% Range ID]",
+              "        )",
+              "    )",
+              ")"
+            ],
+            "formatString": "0.0%;-0.0%;0.0%",
+            "isHidden": true,
+            "lineageTag": "84d5dc90-4ec6-4264-bb15-93bd20af2e0a"
+          },
+          {
+            "name": "IC of Rep",
+            "annotations": [
+              {
+                "name": "PBI_FormatHint",
+                "value": "{\"isDecimal\":true}"
+              }
+            ],
+            "displayFolder": "IC",
+            "expression": "CALCULATE ( [IC], Position[ID] =1 )",
+            "formatString": "#,0",
+            "lineageTag": "c3ab3cb8-7cb8-4cb1-a431-bb3de9a37126"
+          },
+          {
+            "name": "IC of DM",
+            "annotations": [
+              {
+                "name": "PBI_FormatHint",
+                "value": "{\"currencyCulture\":\"en-US\"}"
+              }
+            ],
+            "displayFolder": "IC",
+            "expression": "CALCULATE ( [IC], Position[ID] = 2 )",
+            "formatString": "#,0",
+            "lineageTag": "f4897877-a32b-4899-9f56-e2d410aec852"
+          },
+          {
+            "name": "IC of RM",
+            "annotations": [
+              {
+                "name": "PBI_FormatHint",
+                "value": "{\"currencyCulture\":\"en-US\"}"
+              }
+            ],
+            "displayFolder": "IC",
+            "expression": "CALCULATE ( [IC], Position[ID] = 3 )",
+            "formatString": "#,0",
+            "lineageTag": "5aa1acc7-c84e-4b8c-a55b-2da7408605f9"
+          },
+          {
+            "name": "Eligible HC of Rep",
+            "displayFolder": "HC",
+            "expression": [
+              "",
+              "CALCULATE ( [Eligible HC], Position[ID] = 1 )"
+            ],
+            "formatString": "0",
+            "lineageTag": "444bd579-f7a0-4335-99fd-badbadd6413c"
+          },
+          {
+            "name": "Eligible HC of DM",
+            "displayFolder": "HC",
+            "expression": [
+              "",
+              "CALCULATE ( [Eligible HC], Position[ID] = 2 )"
+            ],
+            "formatString": "0",
+            "lineageTag": "99d840e9-7924-4b04-a2a2-4380fdef7f8f"
+          },
+          {
+            "name": "Eligible HC of RM",
+            "displayFolder": "HC",
+            "expression": [
+              "",
+              "CALCULATE ( [Eligible HC], Position[ID] = 3 )"
+            ],
+            "formatString": "0",
+            "lineageTag": "ce5106b7-e01e-4688-bb02-c1edd3be0f03"
+          },
+          {
+            "name": "Availble HC of Rep",
+            "displayFolder": "HC",
+            "expression": [
+              "",
+              "CALCULATE ( [Available HC], Position[ID] = 1 )"
+            ],
+            "formatString": "0",
+            "lineageTag": "33990e7a-c73d-4123-982e-f91defcad0c4"
+          },
+          {
+            "name": "Availble HC of DM",
+            "displayFolder": "HC",
+            "expression": [
+              "",
+              "CALCULATE ( [Available HC], Position[ID] = 2 )"
+            ],
+            "formatString": "0",
+            "lineageTag": "81dac5de-5723-41a6-9b99-a4c372b71b54"
+          },
+          {
+            "name": "Availble HC of RM",
+            "displayFolder": "HC",
+            "expression": [
+              "",
+              "CALCULATE ( [Available HC], Position[ID] = 3 )"
+            ],
+            "formatString": "0",
+            "lineageTag": "efeef244-9edc-4d32-a8c1-c39a6ba61d74"
+          },
+          {
+            "name": "Average IC per DM",
+            "annotations": [
+              {
+                "name": "PBI_FormatHint",
+                "value": "{\"currencyCulture\":\"en-US\"}"
+              }
+            ],
+            "displayFolder": "IC",
+            "expression": [
+              "",
+              "CALCULATE ( [Average IC per HC], Position[ID] = 2 )"
+            ],
+            "formatString": "#,0",
+            "lineageTag": "032a6ab5-0a35-4864-8fc4-af98d743c8f1"
+          },
+          {
+            "name": "Average IC per RM",
+            "annotations": [
+              {
+                "name": "PBI_FormatHint",
+                "value": "{\"currencyCulture\":\"en-US\"}"
+              }
+            ],
+            "displayFolder": "IC",
+            "expression": [
+              "",
+              "CALCULATE ( [Average IC per HC], Position[ID] = 3 )"
+            ],
+            "formatString": "#,0",
+            "lineageTag": "dcbd35d6-44aa-4653-8017-261a7665e569"
+          },
+          {
+            "name": "Eligible HC% of Rep",
+            "annotations": [
+              {
+                "name": "PBI_FormatHint",
+                "value": "{\"isGeneralNumber\":true}"
+              }
+            ],
+            "displayFolder": "HC",
+            "expression": [
+              "",
+              "CALCULATE ( [Eligible HC%], Position[ID] = 1 )"
+            ],
+            "formatString": "0.0%;-0.0%;0.0%",
+            "lineageTag": "916baf57-7054-4a4c-9efc-d620306a7611"
+          },
+          {
+            "name": "Eligible HC% of DM",
+            "annotations": [
+              {
+                "name": "PBI_FormatHint",
+                "value": "{\"isGeneralNumber\":true}"
+              }
+            ],
+            "displayFolder": "HC",
+            "expression": [
+              "",
+              "CALCULATE ( [Eligible HC%], Position[ID] = 2 )"
+            ],
+            "formatString": "0.0%;-0.0%;0.0%",
+            "lineageTag": "85ce8811-b7c3-4025-886e-9c8b3ba0a94a"
+          },
+          {
+            "name": "Eligible HC% of RM",
+            "annotations": [
+              {
+                "name": "PBI_FormatHint",
+                "value": "{\"isGeneralNumber\":true}"
+              }
+            ],
+            "displayFolder": "HC",
+            "expression": [
+              "",
+              "CALCULATE ( [Eligible HC%], Position[ID] = 3 )"
+            ],
+            "formatString": "0.0%;-0.0%;0.0%",
+            "lineageTag": "851d464b-5567-41b3-81aa-d91cbaf9d3c1"
+          },
+          {
+            "name": "Area in Scope (Y/N)",
+            "displayFolder": "View",
+            "expression": [
+              "",
+              "IF ( DISTINCTCOUNT ( IC[Area ID] )  > 0, 1, 0 )"
+            ],
+            "formatString": "0",
+            "lineageTag": "00bec595-6126-47e5-90e2-9994d996d283"
+          },
+          {
+            "name": "Average IC pe Quarter",
+            "annotations": [
+              {
+                "name": "PBI_FormatHint",
+                "value": "{\"currencyCulture\":\"en-US\"}"
+              }
+            ],
+            "displayFolder": "IC",
+            "expression": [
+              "",
+              "AVERAGEX ( ",
+              "    VALUES ( 'Date'[Quarter] ),",
+              "    [IC]",
+              ")"
+            ],
+            "formatString": "\\$#,0.###############;(\\$#,0.###############);\\$#,0.###############",
+            "lineageTag": "c242139b-61ed-4047-bed9-570b5ec95e45"
+          },
+          {
+            "name": "x",
+            "displayFolder": "View",
+            "expression": [
+              "",
+              "IF ( ISFILTERED ( 'Show Pct'[Value] ), \"On\", \"Off\")"
+            ],
+            "lineageTag": "f1de1fa8-7f53-4826-b0a5-4f4b7f7c89ff"
+          },
+          {
+            "name": "IC Dynamic (for Range Analysis)",
+            "displayFolder": "IC",
+            "expression": [
+              "IF ( ",
+              "\t\t[IC (for Range Analysis)] <> BLANK (),",
+              "\t\tIF ( ",
+              "\t\t\tISFILTERED ( 'Show Pct'[Value] ),",
+              "\t\t\tFORMAT ( [IC %GT (for Range Analysis)], \"0.0%\" ),",
+              "\t\t\tFORMAT ( [IC (for Range Analysis)], \"#,0\" )",
+              "\t\t)",
+              "\t)"
+            ],
+            "lineageTag": "799297b2-3e81-4269-9792-2961d866f302"
+          },
+          {
+            "name": "Eligible HC %GT (for Range Analysis)",
+            "annotations": [
+              {
+                "name": "PBI_FormatHint",
+                "value": "{\"isGeneralNumber\":true}"
+              }
+            ],
+            "changedProperties": [
+              {
+                "property": "IsHidden"
+              }
+            ],
+            "displayFolder": "HC",
+            "expression": [
+              "",
+              "DIVIDE (",
+              "    [Eligible HC (for Range Analysis)], ",
+              "    CALCULATE(",
+              "        [Eligible HC (for Range Analysis)],",
+              "        ALLSELECTED ()",
+              "    )",
+              ")"
+            ],
+            "isHidden": true,
+            "lineageTag": "fa1882a4-375b-4022-9793-508e0de7bef0"
+          },
+          {
+            "name": "Eligible HC Dynamic (for Range Analysis)",
+            "displayFolder": "HC",
+            "expression": [
+              "IF ( ",
+              "\t\t[Eligible HC (for Range Analysis)] <> BLANK (),",
+              "\t\tIF ( ",
+              "   \t\t\tISFILTERED ( 'Show Pct'[Value] ),",
+              "\t\t\tFORMAT ( [Eligible HC %GT (for Range Analysis)], \"0.0%\" ),",
+              "\t\t\tFORMAT ( [Eligible HC (for Range Analysis)], \"#,0\" )",
+              "\t\t)",
+              ")"
+            ],
+            "lineageTag": "b512b5d7-d2c0-4d5a-982b-7774cc73b321"
+          }
+        ],
+        "partitions": [
+          {
+            "name": "ME",
+            "mode": "import",
+            "source": {
+              "expression": [
+                "let",
+                "    Source = Table.FromRows(Json.Document(Binary.Decompress(Binary.FromText(\"i44FAA==\", BinaryEncoding.Base64), Compression.Deflate)), let _t = ((type nullable text) meta [Serialized.Text = true]) in type table [Column1 = _t])",
+                "in",
+                "    Source"
+              ],
+              "type": "m"
+            }
+          }
+        ]
+      },
+      {
+        "name": "IC2",
+        "annotations": [
+          {
+            "name": "PBI_ResultType",
+            "value": "Table"
+          },
+          {
+            "name": "PBI_NavigationStepName",
+            "value": "Navigation"
+          }
+        ],
+        "columns": [
+          {
+            "name": "Year Quarter ID",
+            "annotations": [
+              {
+                "name": "SummarizationSetBy",
+                "value": "Automatic"
+              }
+            ],
+            "changedProperties": [
+              {
+                "property": "IsHidden"
+              }
+            ],
+            "dataType": "int64",
+            "formatString": "0",
+            "isHidden": true,
+            "lineageTag": "9fdd2a1c-dbe6-436a-9839-6df425be64ad",
+            "sourceColumn": "Year Quarter ID",
+            "summarizeBy": "none"
+          },
+          {
+            "name": "Area ID",
+            "annotations": [
+              {
+                "name": "SummarizationSetBy",
+                "value": "Automatic"
+              }
+            ],
+            "changedProperties": [
+              {
+                "property": "IsHidden"
+              }
+            ],
+            "dataType": "int64",
+            "formatString": "0",
+            "isHidden": true,
+            "lineageTag": "679750a4-ec02-435c-b370-8a9f30317a92",
+            "sourceColumn": "Area ID",
+            "summarizeBy": "none"
+          },
+          {
+            "name": "Position ID",
+            "annotations": [
+              {
+                "name": "SummarizationSetBy",
+                "value": "Automatic"
+              }
+            ],
+            "changedProperties": [
+              {
+                "property": "IsHidden"
+              }
+            ],
+            "dataType": "int64",
+            "formatString": "0",
+            "isHidden": true,
+            "lineageTag": "227465eb-e78b-49ab-bff4-b471019f388b",
+            "sourceColumn": "Position ID",
+            "summarizeBy": "none"
+          },
+          {
+            "name": "Position Code",
+            "annotations": [
+              {
+                "name": "SummarizationSetBy",
+                "value": "Automatic"
+              }
+            ],
+            "dataType": "string",
+            "lineageTag": "edf99d03-ed2e-4a0a-b81a-4957018a9a48",
+            "sourceColumn": "Position Code",
+            "summarizeBy": "none"
+          },
+          {
+            "name": "PID",
+            "annotations": [
+              {
+                "name": "SummarizationSetBy",
+                "value": "Automatic"
+              }
+            ],
+            "changedProperties": [
+              {
+                "property": "IsHidden"
+              }
+            ],
+            "dataType": "int64",
+            "formatString": "0",
+            "lineageTag": "65923f6d-b998-4725-82ee-73058ba3e424",
+            "sourceColumn": "PID",
+            "summarizeBy": "count"
+          },
+          {
+            "name": "Name",
+            "annotations": [
+              {
+                "name": "SummarizationSetBy",
+                "value": "Automatic"
+              }
+            ],
+            "dataType": "string",
+            "lineageTag": "47591f6f-26f9-468d-98ac-f0b5a9376084",
+            "sourceColumn": "Name",
+            "summarizeBy": "none"
+          },
+          {
+            "name": "Hire Date",
+            "annotations": [
+              {
+                "name": "SummarizationSetBy",
+                "value": "Automatic"
+              },
+              {
+                "name": "UnderlyingDateTimeDataType",
+                "value": "Date"
+              }
+            ],
+            "dataType": "dateTime",
+            "formatString": "Long Date",
+            "lineageTag": "781a541b-a4fd-4256-a186-ec42a73a1f5d",
+            "sourceColumn": "Hire Date",
+            "summarizeBy": "none"
+          },
+          {
+            "name": "Exit Date",
+            "annotations": [
+              {
+                "name": "SummarizationSetBy",
+                "value": "Automatic"
+              },
+              {
+                "name": "UnderlyingDateTimeDataType",
+                "value": "Date"
+              }
+            ],
+            "dataType": "dateTime",
+            "formatString": "Long Date",
+            "lineageTag": "0ab68352-d578-476e-9fbb-984d98f1cff4",
+            "sourceColumn": "Exit Date",
+            "summarizeBy": "none"
+          },
+          {
+            "name": "Area Target",
+            "annotations": [
+              {
+                "name": "SummarizationSetBy",
+                "value": "Automatic"
+              },
+              {
+                "name": "PBI_FormatHint",
+                "value": "{\"currencyCulture\":\"en-US\"}"
+              }
+            ],
+            "dataType": "decimal",
+            "formatString": "\\$#,0.###############;(\\$#,0.###############);\\$#,0.###############",
+            "lineageTag": "02b39452-3e45-4167-9a5c-e90c0e6126e6",
+            "sourceColumn": "Area Target",
+            "summarizeBy": "sum"
+          },
+          {
+            "name": "Area Actual",
+            "annotations": [
+              {
+                "name": "SummarizationSetBy",
+                "value": "Automatic"
+              },
+              {
+                "name": "PBI_FormatHint",
+                "value": "{\"currencyCulture\":\"en-US\"}"
+              }
+            ],
+            "dataType": "decimal",
+            "formatString": "\\$#,0.###############;(\\$#,0.###############);\\$#,0.###############",
+            "lineageTag": "5ac8595f-c365-4d93-8c72-2103ae8f2729",
+            "sourceColumn": "Area Actual",
+            "summarizeBy": "sum"
+          },
+          {
+            "name": "Ach%",
+            "annotations": [
+              {
+                "name": "SummarizationSetBy",
+                "value": "Automatic"
+              },
+              {
+                "name": "PBI_FormatHint",
+                "value": "{\"isGeneralNumber\":true}"
+              }
+            ],
+            "dataType": "double",
+            "lineageTag": "9016e40f-d774-4466-8500-dfe5498aa050",
+            "sourceColumn": "Ach%",
+            "summarizeBy": "sum"
+          },
+          {
+            "name": "Net Growth",
+            "annotations": [
+              {
+                "name": "SummarizationSetBy",
+                "value": "Automatic"
+              },
+              {
+                "name": "PBI_FormatHint",
+                "value": "{\"currencyCulture\":\"en-US\"}"
+              }
+            ],
+            "dataType": "decimal",
+            "formatString": "\\$#,0.###############;(\\$#,0.###############);\\$#,0.###############",
+            "lineageTag": "7acd76fd-88c4-479b-aa6d-866a236ada3d",
+            "sourceColumn": "Net Growth",
+            "summarizeBy": "sum"
+          },
+          {
+            "name": "Initial Target",
+            "annotations": [
+              {
+                "name": "SummarizationSetBy",
+                "value": "Automatic"
+              },
+              {
+                "name": "PBI_FormatHint",
+                "value": "{\"isDecimal\":true}"
+              }
+            ],
+            "dataType": "decimal",
+            "formatString": "#,0",
+            "lineageTag": "de539f63-6406-42e4-b5ff-4f461eb1ef3b",
+            "sourceColumn": "Initial Target",
+            "summarizeBy": "sum"
+          },
+          {
+            "name": "Initial Target (Unit)",
+            "annotations": [
+              {
+                "name": "SummarizationSetBy",
+                "value": "Automatic"
+              }
+            ],
+            "dataType": "int64",
+            "formatString": "0",
+            "lineageTag": "dfbb72bf-4822-48b3-93a2-59be47ba2534",
+            "sourceColumn": "Initial Target (Unit)",
+            "summarizeBy": "sum"
+          },
+          {
+            "name": "Initial Actual",
+            "annotations": [
+              {
+                "name": "SummarizationSetBy",
+                "value": "Automatic"
+              },
+              {
+                "name": "PBI_FormatHint",
+                "value": "{\"currencyCulture\":\"en-US\"}"
+              }
+            ],
+            "dataType": "decimal",
+            "formatString": "\\$#,0.###############;(\\$#,0.###############);\\$#,0.###############",
+            "lineageTag": "496462c5-d283-4ffe-916a-f0513b62267f",
+            "sourceColumn": "Initial Actual",
+            "summarizeBy": "sum"
+          },
+          {
+            "name": "Initial Actual (Unit)",
+            "annotations": [
+              {
+                "name": "SummarizationSetBy",
+                "value": "Automatic"
+              }
+            ],
+            "dataType": "int64",
+            "formatString": "0",
+            "lineageTag": "184656a0-cbe5-4b7e-8c9d-f96174960a40",
+            "sourceColumn": "Initial Actual (Unit)",
+            "summarizeBy": "sum"
+          },
+          {
+            "name": "Initial Ach%",
+            "annotations": [
+              {
+                "name": "SummarizationSetBy",
+                "value": "Automatic"
+              },
+              {
+                "name": "PBI_FormatHint",
+                "value": "{\"isGeneralNumber\":true}"
+              }
+            ],
+            "dataType": "double",
+            "lineageTag": "20351ca5-2d96-48a3-9938-3d10db54d38d",
+            "sourceColumn": "Initial Ach%",
+            "summarizeBy": "sum"
+          },
+          {
+            "name": "IC Type",
+            "annotations": [
+              {
+                "name": "SummarizationSetBy",
+                "value": "Automatic"
+              }
+            ],
+            "changedProperties": [
+              {
+                "property": "SortByColumn"
+              }
+            ],
+            "dataType": "string",
+            "lineageTag": "fefae3e8-59d4-4fa6-9c79-ebc449bde9f2",
+            "sortByColumn": "IC Type ID",
+            "sourceColumn": "IC Type",
+            "summarizeBy": "none"
+          },
+          {
+            "name": "Amount",
+            "annotations": [
+              {
+                "name": "SummarizationSetBy",
+                "value": "Automatic"
+              },
+              {
+                "name": "PBI_FormatHint",
+                "value": "{\"isDecimal\":true}"
+              }
+            ],
+            "changedProperties": [
+              {
+                "property": "IsHidden"
+              }
+            ],
+            "dataType": "decimal",
+            "formatString": "#,0",
+            "isHidden": true,
+            "lineageTag": "fb20589e-dfec-46c6-90cb-60ad66d89e63",
+            "sourceColumn": "Amount",
+            "summarizeBy": "sum"
+          },
+          {
+            "name": "Area Target Range",
+            "annotations": [
+              {
+                "name": "SummarizationSetBy",
+                "value": "Automatic"
+              }
+            ],
+            "changedProperties": [
+              {
+                "property": "SortByColumn"
+              }
+            ],
+            "dataType": "string",
+            "lineageTag": "f927f4bf-763e-45e7-9694-815f97e63f5c",
+            "sortByColumn": "Area Target Range ID",
+            "sourceColumn": "Area Target Range",
+            "summarizeBy": "none"
+          },
+          {
+            "name": "Area Target Range ID",
+            "annotations": [
+              {
+                "name": "SummarizationSetBy",
+                "value": "Automatic"
+              }
+            ],
+            "changedProperties": [
+              {
+                "property": "IsHidden"
+              }
+            ],
+            "dataType": "int64",
+            "formatString": "0",
+            "isHidden": true,
+            "lineageTag": "dcdfe749-1fce-4fda-bb5e-6bae52886e94",
+            "sourceColumn": "Area Target Range ID",
+            "summarizeBy": "count"
+          },
+          {
+            "name": "Ach% Range",
+            "annotations": [
+              {
+                "name": "SummarizationSetBy",
+                "value": "Automatic"
+              }
+            ],
+            "changedProperties": [
+              {
+                "property": "SortByColumn"
+              }
+            ],
+            "dataType": "string",
+            "lineageTag": "0b64a4a1-2366-481b-8877-b99ee6079f55",
+            "sortByColumn": "Ach% Range ID",
+            "sourceColumn": "Ach% Range",
+            "summarizeBy": "none"
+          },
+          {
+            "name": "Ach% Range ID",
+            "annotations": [
+              {
+                "name": "SummarizationSetBy",
+                "value": "Automatic"
+              }
+            ],
+            "changedProperties": [
+              {
+                "property": "IsHidden"
+              }
+            ],
+            "dataType": "int64",
+            "formatString": "0",
+            "isHidden": true,
+            "lineageTag": "bdc6b1f6-9677-45fc-a6f6-b2fc57910e1b",
+            "sourceColumn": "Ach% Range ID",
+            "summarizeBy": "count"
+          },
+          {
+            "name": "Initial Ach% Range",
+            "annotations": [
+              {
+                "name": "SummarizationSetBy",
+                "value": "Automatic"
+              }
+            ],
+            "changedProperties": [
+              {
+                "property": "SortByColumn"
+              }
+            ],
+            "dataType": "string",
+            "lineageTag": "cc3dcf49-0a53-45ff-81ee-08570d0c920a",
+            "sortByColumn": "Initial Ach% Range ID",
+            "sourceColumn": "Initial Ach% Range",
+            "summarizeBy": "none"
+          },
+          {
+            "name": "Initial Ach% Range ID",
+            "annotations": [
+              {
+                "name": "SummarizationSetBy",
+                "value": "Automatic"
+              }
+            ],
+            "changedProperties": [
+              {
+                "property": "IsHidden"
+              }
+            ],
+            "dataType": "int64",
+            "formatString": "0",
+            "isHidden": true,
+            "lineageTag": "bf901490-e987-4758-9fd1-7896002c4b96",
+            "sourceColumn": "Initial Ach% Range ID",
+            "summarizeBy": "count"
+          },
+          {
+            "name": "Net Growth Range",
+            "annotations": [
+              {
+                "name": "SummarizationSetBy",
+                "value": "Automatic"
+              }
+            ],
+            "changedProperties": [
+              {
+                "property": "SortByColumn"
+              }
+            ],
+            "dataType": "string",
+            "lineageTag": "04779907-3947-48d9-b11d-23d6696b8154",
+            "sortByColumn": "Net Growth Range ID",
+            "sourceColumn": "Net Growth Range",
+            "summarizeBy": "none"
+          },
+          {
+            "name": "Net Growth Range ID",
+            "annotations": [
+              {
+                "name": "SummarizationSetBy",
+                "value": "Automatic"
+              }
+            ],
+            "changedProperties": [
+              {
+                "property": "IsHidden"
+              }
+            ],
+            "dataType": "int64",
+            "formatString": "0",
+            "isHidden": true,
+            "lineageTag": "6b7a2dc0-919d-4c41-853f-877902343198",
+            "sourceColumn": "Net Growth Range ID",
+            "summarizeBy": "count"
+          },
+          {
+            "name": "IC Range",
+            "annotations": [
+              {
+                "name": "SummarizationSetBy",
+                "value": "Automatic"
+              }
+            ],
+            "changedProperties": [
+              {
+                "property": "SortByColumn"
+              }
+            ],
+            "dataType": "string",
+            "lineageTag": "eaba9483-812b-4c47-b36a-fc8a2023c4e6",
+            "sortByColumn": "IC Range ID",
+            "sourceColumn": "IC Range",
+            "summarizeBy": "none"
+          },
+          {
+            "name": "IC Range ID",
+            "annotations": [
+              {
+                "name": "SummarizationSetBy",
+                "value": "Automatic"
+              }
+            ],
+            "changedProperties": [
+              {
+                "property": "IsHidden"
+              }
+            ],
+            "dataType": "int64",
+            "formatString": "0",
+            "isHidden": true,
+            "lineageTag": "b449af1b-6f3a-4def-88b3-dc91e1e030ed",
+            "sourceColumn": "IC Range ID",
+            "summarizeBy": "count"
+          },
+          {
+            "name": "Length Of Service Range",
+            "annotations": [
+              {
+                "name": "SummarizationSetBy",
+                "value": "Automatic"
+              }
+            ],
+            "changedProperties": [
+              {
+                "property": "SortByColumn"
+              }
+            ],
+            "dataType": "string",
+            "expression": [
+              "",
+              "CALCULATE ( ",
+              "    SELECTEDVALUE ( 'Length of Service Range'[Name] ),",
+              "    FILTER (",
+              "        'Length of Service Range',",
+              "        'Length of Service Range'[Min] <= IC2[Length of Service (Months)] ",
+              "            && 'Length of Service Range'[Max] >  IC2[Length of Service (Months)]",
+              "    )",
+              ")"
+            ],
+            "isDataTypeInferred": true,
+            "lineageTag": "7408df10-cc77-4d71-be50-1c337ee54e55",
+            "sortByColumn": "Length Of Service Range ID",
+            "summarizeBy": "none",
+            "type": "calculated"
+          },
+          {
+            "name": "Length of Service (Months)",
+            "annotations": [
+              {
+                "name": "SummarizationSetBy",
+                "value": "User"
+              }
+            ],
+            "changedProperties": [
+              {
+                "property": "IsHidden"
+              }
+            ],
+            "dataType": "int64",
+            "expression": [
+              "",
+              "VAR _HireDateDay = DAY ( IC2[Hire Date] )",
+              "VAR _HireDate = ",
+              "    SWITCH ( ",
+              "        TRUE,",
+              "        NOT (ISBLANK ( IC2[Hire Date] ) ) && _HireDateDay <=15,",
+              "        DATE ( YEAR ( IC2[Hire Date] ), MONTH ( IC2[Hire Date] ), 1 ),",
+              "        NOT (ISBLANK ( IC2[Hire Date] ) ) && _HireDateDay >15,",
+              "        DATE ( YEAR ( IC2[Hire Date] ), MONTH ( IC2[Hire Date] ) + 1, 1 ),",
+              "        BLANK ()",
+              "    )",
+              "",
+              "VAR _ExitDate = ",
+              "    SWITCH ( ",
+              "        TRUE,",
+              "        ISBLANK ( IC2[Hire Date] ),",
+              "        BLANK (),",
+              "        NOT ( ISBLANK ( IC2[Exit Date] ) ) && IC2[Exit Date] < EOMONTH ( IC2[Exit Date], 0 ),",
+              "        EOMONTH ( IC2[Exit Date], -1 ),",
+              "        NOT ( ISBLANK ( IC2[Exit Date] ) ) && IC2[Exit Date] = EOMONTH ( IC2[Exit Date], 0 ),",
+              "        IC2[Exit Date],",
+              "        [Date of Data Date]",
+              "    )",
+              "VAR _Result = ",
+              "    DATEDIFF ( _HireDate, _ExitDate, MONTH ) + 1",
+              "RETURN",
+              "    _Result"
+            ],
+            "formatString": "0",
+            "isDataTypeInferred": true,
+            "isHidden": true,
+            "lineageTag": "8bebf041-ee87-4497-b15e-1f403264190f",
+            "summarizeBy": "none",
+            "type": "calculated"
+          },
+          {
+            "name": "Length Of Service Range ID",
+            "annotations": [
+              {
+                "name": "SummarizationSetBy",
+                "value": "User"
+              }
+            ],
+            "changedProperties": [
+              {
+                "property": "IsHidden"
+              }
+            ],
+            "dataType": "int64",
+            "expression": [
+              "",
+              "CALCULATE ( ",
+              "    SELECTEDVALUE ( 'Length of Service Range'[ID] ),",
+              "    FILTER (",
+              "        'Length of Service Range',",
+              "        'Length of Service Range'[Min] <= IC2[Length of Service (Months)] ",
+              "            && 'Length of Service Range'[Max] >  IC2[Length of Service (Months)]",
+              "    )",
+              ")"
+            ],
+            "formatString": "0",
+            "isDataTypeInferred": true,
+            "isHidden": true,
+            "lineageTag": "afeee39e-889b-458c-b100-62ec3fdd04af",
+            "summarizeBy": "none",
+            "type": "calculated"
+          },
+          {
+            "name": "Initial Target Range",
+            "annotations": [
+              {
+                "name": "SummarizationSetBy",
+                "value": "Automatic"
+              }
+            ],
+            "changedProperties": [
+              {
+                "property": "SortByColumn"
+              }
+            ],
+            "dataType": "string",
+            "lineageTag": "36c4a401-3eee-4e85-92b4-1f338d27cbff",
+            "sortByColumn": "Initial Target Range ID",
+            "sourceColumn": "Initial Target Range",
+            "summarizeBy": "none"
+          },
+          {
+            "name": "Initial Target Range ID",
+            "annotations": [
+              {
+                "name": "SummarizationSetBy",
+                "value": "Automatic"
+              }
+            ],
+            "dataType": "int64",
+            "formatString": "0",
+            "lineageTag": "a2d1f847-4a85-4011-9ff4-78eaa3c60871",
+            "sourceColumn": "Initial Target Range ID",
+            "summarizeBy": "count"
+          },
+          {
+            "name": "IC Type ID",
+            "annotations": [
+              {
+                "name": "SummarizationSetBy",
+                "value": "Automatic"
+              }
+            ],
+            "changedProperties": [
+              {
+                "property": "IsHidden"
+              }
+            ],
+            "dataType": "int64",
+            "formatString": "0",
+            "isHidden": true,
+            "lineageTag": "58652d16-7c9d-4a11-a212-04574bce4348",
+            "sourceColumn": "IC Type ID",
+            "summarizeBy": "count"
+          }
+        ],
+        "lineageTag": "9355a472-3c65-44ec-a788-75df25440af6",
+        "partitions": [
+          {
+            "name": "IC2",
+            "mode": "import",
+            "queryGroup": "Load\\Fact",
+            "source": {
+              "expression": [
+                "let",
+                "    Source = IC2_processed",
+                "in",
+                "    Source"
+              ],
+              "type": "m"
+            }
+          }
+        ]
+      },
+      {
+        "name": "Hire Date",
+        "annotations": [
+          {
+            "name": "PBI_Id",
+            "value": "bee92af79d15408484c52f902022ddea"
+          }
+        ],
+        "columns": [
+          {
+            "name": "Date",
+            "annotations": [
+              {
+                "name": "SummarizationSetBy",
+                "value": "Automatic"
+              }
+            ],
+            "dataType": "dateTime",
+            "formatString": "General Date",
+            "isDataTypeInferred": true,
+            "isHidden": true,
+            "isNameInferred": true,
+            "lineageTag": "b1b6f03b-10af-430a-afd5-d2bb7892d3ac",
+            "sourceColumn": "[Date]",
+            "summarizeBy": "none",
+            "type": "calculatedTableColumn"
+          },
+          {
+            "name": "Year",
+            "annotations": [
+              {
+                "name": "SummarizationSetBy",
+                "value": "User"
+              }
+            ],
+            "dataType": "int64",
+            "formatString": "0",
+            "isDataTypeInferred": true,
+            "isHidden": true,
+            "isNameInferred": true,
+            "lineageTag": "2b563554-dfd5-4957-87ba-b8d9a513204c",
+            "sourceColumn": "[Year]",
+            "summarizeBy": "none",
+            "type": "calculatedTableColumn"
+          },
+          {
+            "name": "Quarter",
+            "annotations": [
+              {
+                "name": "SummarizationSetBy",
+                "value": "Automatic"
+              }
+            ],
+            "dataType": "string",
+            "isDataTypeInferred": true,
+            "isHidden": true,
+            "isNameInferred": true,
+            "lineageTag": "40da7646-73e7-4f01-834e-6110e9a64cca",
+            "sourceColumn": "[Quarter]",
+            "summarizeBy": "none",
+            "type": "calculatedTableColumn"
+          },
+          {
+            "name": "Month",
+            "annotations": [
+              {
+                "name": "SummarizationSetBy",
+                "value": "Automatic"
+              }
+            ],
+            "dataType": "string",
+            "isDataTypeInferred": true,
+            "isHidden": true,
+            "isNameInferred": true,
+            "lineageTag": "c8fb3166-c4c7-4ebf-8cbc-e9d6f089c335",
+            "sortByColumn": "Month Number",
+            "sourceColumn": "[Month]",
+            "summarizeBy": "none",
+            "type": "calculatedTableColumn"
+          },
+          {
+            "name": "Month Number",
+            "annotations": [
+              {
+                "name": "SummarizationSetBy",
+                "value": "User"
+              }
+            ],
+            "dataType": "int64",
+            "formatString": "0",
+            "isDataTypeInferred": true,
+            "isHidden": true,
+            "isNameInferred": true,
+            "lineageTag": "86c5bd26-1e5f-4128-a9de-e054ac8f36cb",
+            "sourceColumn": "[Month Number]",
+            "summarizeBy": "none",
+            "type": "calculatedTableColumn"
+          }
+        ],
+        "hierarchies": [
+          {
+            "name": "Hire Date Hierarchy",
+            "isHidden": true,
+            "levels": [
+              {
+                "name": "Year",
+                "column": "Year",
+                "lineageTag": "8d8e7b23-1d13-49c2-84af-64c8c2b0b929",
+                "ordinal": 0
+              },
+              {
+                "name": "Quarter",
+                "column": "Quarter",
+                "lineageTag": "467a8a57-e3f9-4c7a-8aa9-7cf1aa80a024",
+                "ordinal": 1
+              },
+              {
+                "name": "Month",
+                "column": "Month",
+                "lineageTag": "ba367749-a56e-4ed9-8d68-5ad8e1a4bdc6",
+                "ordinal": 2
+              }
+            ],
+            "lineageTag": "0be24d77-7541-45d5-8fc7-6343679d93f1"
+          }
+        ],
+        "isHidden": true,
+        "lineageTag": "76883f65-e6a1-44ae-b585-44b09f72723d",
+        "partitions": [
+          {
+            "name": "Hire Date",
+            "mode": "import",
+            "source": {
+              "expression": [
+                "",
+                "VAR __Dates = ",
+                "    CALENDARAUTO ()",
+                "VAR __Result = ",
+                "    ADDCOLUMNS ( ",
+                "        __Dates,",
+                "        \"Year\", YEAR ( [Date] ),",
+                "        \"Quarter\", \"Q\" & QUARTER ( [Date] ),",
+                "        \"Month Number\", MONTH ( [Date] ),",
+                "        \"Month\", FORMAT ( [Date], \"mmm\" )",
+                "    )",
+                "RETURN",
+                "    __Result"
+              ],
+              "type": "calculated"
+            }
+          }
+        ]
+      },
+      {
+        "name": "Length of Service Range",
+        "annotations": [
+          {
+            "name": "PBI_ResultType",
+            "value": "Table"
+          }
+        ],
+        "changedProperties": [
+          {
+            "property": "IsHidden"
+          }
+        ],
+        "columns": [
+          {
+            "name": "ID",
+            "annotations": [
+              {
+                "name": "SummarizationSetBy",
+                "value": "Automatic"
+              }
+            ],
+            "changedProperties": [
+              {
+                "property": "IsHidden"
+              }
+            ],
+            "dataType": "int64",
+            "formatString": "0",
+            "isHidden": true,
+            "lineageTag": "0b659420-6b21-47a5-b1de-958e2101e35b",
+            "sourceColumn": "ID",
+            "summarizeBy": "count"
+          },
+          {
+            "name": "Name",
+            "annotations": [
+              {
+                "name": "SummarizationSetBy",
+                "value": "Automatic"
+              }
+            ],
+            "changedProperties": [
+              {
+                "property": "IsHidden"
+              }
+            ],
+            "dataType": "string",
+            "isHidden": true,
+            "lineageTag": "00b46726-a764-4e6a-bcf0-a64a0dbd2e81",
+            "sourceColumn": "Name",
+            "summarizeBy": "none"
+          },
+          {
+            "name": "Min",
+            "annotations": [
+              {
+                "name": "SummarizationSetBy",
+                "value": "Automatic"
+              }
+            ],
+            "changedProperties": [
+              {
+                "property": "IsHidden"
+              }
+            ],
+            "dataType": "int64",
+            "formatString": "0",
+            "isHidden": true,
+            "lineageTag": "e420153b-46f2-429f-aee8-cf0321573a2b",
+            "sourceColumn": "Min",
+            "summarizeBy": "sum"
+          },
+          {
+            "name": "Max",
+            "annotations": [
+              {
+                "name": "SummarizationSetBy",
+                "value": "Automatic"
+              }
+            ],
+            "changedProperties": [
+              {
+                "property": "IsHidden"
+              }
+            ],
+            "dataType": "int64",
+            "formatString": "0",
+            "isHidden": true,
+            "lineageTag": "3cf58f10-b46c-4f65-9b01-9ea1a3fe43e9",
+            "sourceColumn": "Max",
+            "summarizeBy": "sum"
+          }
+        ],
+        "isHidden": true,
+        "lineageTag": "9474115c-2b40-4865-9048-859831f6f439",
+        "partitions": [
+          {
+            "name": "Length of Service Range",
+            "mode": "import",
+            "queryGroup": "Load\\Dim",
+            "source": {
+              "expression": [
+                "let",
+                "    Source = #\"Length of Service Range_raw\"",
+                "in",
+                "    Source"
+              ],
+              "type": "m"
+            }
+          }
+        ]
+      },
+      {
+        "name": "Position Detail",
+        "annotations": [
+          {
+            "name": "PBI_ResultType",
+            "value": "Table"
+          }
+        ],
+        "columns": [
+          {
+            "name": "Year Quarter ID",
+            "annotations": [
+              {
+                "name": "SummarizationSetBy",
+                "value": "Automatic"
+              }
+            ],
+            "changedProperties": [
+              {
+                "property": "IsHidden"
+              }
+            ],
+            "dataType": "int64",
+            "formatString": "0",
+            "isHidden": true,
+            "lineageTag": "0c1f1794-0963-45f7-9322-cc73b03990e1",
+            "sourceColumn": "Year Quarter ID",
+            "summarizeBy": "none"
+          },
+          {
+            "name": "Area ID",
+            "annotations": [
+              {
+                "name": "SummarizationSetBy",
+                "value": "Automatic"
+              }
+            ],
+            "changedProperties": [
+              {
+                "property": "IsHidden"
+              }
+            ],
+            "dataType": "int64",
+            "formatString": "0",
+            "isHidden": true,
+            "lineageTag": "fb58cabf-0cba-4cd8-8799-d5c288708e81",
+            "sourceColumn": "Area ID",
+            "summarizeBy": "none"
+          },
+          {
+            "name": "Position ID",
+            "annotations": [
+              {
+                "name": "SummarizationSetBy",
+                "value": "Automatic"
+              }
+            ],
+            "changedProperties": [
+              {
+                "property": "IsHidden"
+              }
+            ],
+            "dataType": "int64",
+            "formatString": "0",
+            "isHidden": true,
+            "lineageTag": "92c02378-5be3-4433-8164-c3447380ad9e",
+            "sourceColumn": "Position ID",
+            "summarizeBy": "none"
+          },
+          {
+            "name": "Position Code",
+            "annotations": [
+              {
+                "name": "SummarizationSetBy",
+                "value": "Automatic"
+              }
+            ],
+            "dataType": "string",
+            "lineageTag": "898a59eb-fe40-4830-b428-d37d45390054",
+            "sourceColumn": "Position Code",
+            "summarizeBy": "none"
+          },
+          {
+            "name": "PID",
+            "annotations": [
+              {
+                "name": "SummarizationSetBy",
+                "value": "Automatic"
+              }
+            ],
+            "dataType": "string",
+            "lineageTag": "bfc5b250-f873-4b9d-8804-cf5f22495c01",
+            "sourceColumn": "PID",
+            "summarizeBy": "none"
+          },
+          {
+            "name": "Name",
+            "annotations": [
+              {
+                "name": "SummarizationSetBy",
+                "value": "Automatic"
+              }
+            ],
+            "dataType": "string",
+            "lineageTag": "c2cb16c4-9d85-4f2d-975b-299cca814246",
+            "sourceColumn": "Name",
+            "summarizeBy": "none"
+          }
+        ],
+        "lineageTag": "d30e27ce-f8ab-4884-9022-e3856b23294e",
+        "partitions": [
+          {
+            "name": "Position Detail",
+            "mode": "import",
+            "queryGroup": "Load\\Fact",
+            "source": {
+              "expression": [
+                "let",
+                "    Source = #\"Position Detail_processed\"",
+                "in",
+                "    Source"
+              ],
+              "type": "m"
+            }
+          }
+        ]
+      },
+      {
+        "name": "Parameter",
+        "annotations": [
+          {
+            "name": "PBI_Id",
+            "value": "80b476fee0c241a3a4d0f2597fcc882c"
+          }
+        ],
+        "columns": [
+          {
+            "name": "Parameter",
+            "annotations": [
+              {
+                "name": "SummarizationSetBy",
+                "value": "Automatic"
+              }
+            ],
+            "dataType": "string",
+            "isDataTypeInferred": true,
+            "isHidden": true,
+            "isNameInferred": false,
+            "lineageTag": "a8f85a65-a51c-49cb-a13c-aa174395f528",
+            "relatedColumnDetails": {
+              "groupByColumns": [
+                {
+                  "groupingColumn": "Parameter Fields"
+                }
+              ]
+            },
+            "sortByColumn": "Parameter Order",
+            "sourceColumn": "[Value1]",
+            "summarizeBy": "none",
+            "type": "calculatedTableColumn"
+          },
+          {
+            "name": "Parameter Fields",
+            "annotations": [
+              {
+                "name": "SummarizationSetBy",
+                "value": "Automatic"
+              }
+            ],
+            "dataType": "string",
+            "extendedProperties": [
+              {
+                "name": "ParameterMetadata",
+                "type": "json",
+                "value": {
+                  "kind": 2,
+                  "version": 3
+                }
+              }
+            ],
+            "isDataTypeInferred": true,
+            "isHidden": true,
+            "isNameInferred": false,
+            "lineageTag": "91711065-903d-49bc-99aa-7ccb0147783d",
+            "sortByColumn": "Parameter Order",
+            "sourceColumn": "[Value2]",
+            "summarizeBy": "none",
+            "type": "calculatedTableColumn"
+          },
+          {
+            "name": "Parameter Order",
+            "annotations": [
+              {
+                "name": "SummarizationSetBy",
+                "value": "Automatic"
+              }
+            ],
+            "dataType": "int64",
+            "formatString": "0",
+            "isDataTypeInferred": true,
+            "isHidden": true,
+            "isNameInferred": false,
+            "lineageTag": "bc99efce-d5aa-4845-9b93-65bf72edf204",
+            "sourceColumn": "[Value3]",
+            "summarizeBy": "sum",
+            "type": "calculatedTableColumn"
+          }
+        ],
+        "isHidden": true,
+        "lineageTag": "1ed7d138-a95b-4e65-b351-78babc4e2056",
+        "partitions": [
+          {
+            "name": "Parameter",
+            "mode": "import",
+            "source": {
+              "expression": [
+                "{",
+                "    (\"IC\", NAMEOF('ME'[IC]), 0),",
+                "    (\"Average IC per HC\", NAMEOF('ME'[Average IC per HC]), 1)",
+                "}"
+              ],
+              "type": "calculated"
+            }
+          }
+        ]
+      },
+      {
+        "name": "Metrics",
+        "annotations": [
+          {
+            "name": "PBI_Id",
+            "value": "3f856a2aa4d04ec5a964b0c9671e469b"
+          }
+        ],
+        "columns": [
+          {
+            "name": "Name",
+            "annotations": [
+              {
+                "name": "SummarizationSetBy",
+                "value": "Automatic"
+              }
+            ],
+            "dataType": "string",
+            "isDataTypeInferred": true,
+            "isHidden": true,
+            "isNameInferred": false,
+            "lineageTag": "9b17cf0f-9d4c-4780-a01c-b66568bfe216",
+            "relatedColumnDetails": {
+              "groupByColumns": [
+                {
+                  "groupingColumn": "Parameter Fields"
+                }
+              ]
+            },
+            "sortByColumn": "Parameter Order",
+            "sourceColumn": "[Value1]",
+            "summarizeBy": "none",
+            "type": "calculatedTableColumn"
+          },
+          {
+            "name": "Parameter Fields",
+            "annotations": [
+              {
+                "name": "SummarizationSetBy",
+                "value": "Automatic"
+              }
+            ],
+            "dataType": "string",
+            "extendedProperties": [
+              {
+                "name": "ParameterMetadata",
+                "type": "json",
+                "value": {
+                  "kind": 2,
+                  "version": 3
+                }
+              }
+            ],
+            "isDataTypeInferred": true,
+            "isHidden": true,
+            "isNameInferred": false,
+            "lineageTag": "b01bb7d3-ea86-4749-ac84-a7849acc472f",
+            "sortByColumn": "Parameter Order",
+            "sourceColumn": "[Value2]",
+            "summarizeBy": "none",
+            "type": "calculatedTableColumn"
+          },
+          {
+            "name": "Parameter Order",
+            "annotations": [
+              {
+                "name": "SummarizationSetBy",
+                "value": "Automatic"
+              }
+            ],
+            "dataType": "int64",
+            "formatString": "0",
+            "isDataTypeInferred": true,
+            "isHidden": true,
+            "isNameInferred": false,
+            "lineageTag": "1a2ce817-d56d-4559-b26d-97871cf24817",
+            "sourceColumn": "[Value3]",
+            "summarizeBy": "sum",
+            "type": "calculatedTableColumn"
+          }
+        ],
+        "isHidden": true,
+        "lineageTag": "37703407-550c-43ce-8eb0-ec9e4e292039",
+        "partitions": [
+          {
+            "name": "Metrics",
+            "mode": "import",
+            "source": {
+              "expression": [
+                "{",
+                "    (\"Available HC\", NAMEOF('ME'[Available HC]), 0),",
+                "    (\"Eligible HC\", NAMEOF('ME'[Eligible HC]), 1),",
+                "    (\"Ach Eligible HC\", NAMEOF('ME'[Ach Eligible HC]), 2),",
+                "    (\"Ach Eligible HC%\", NAMEOF('ME'[Ach Eligible HC%]), 3),",
+                "    (\"IC\", NAMEOF('ME'[IC]), 4),",
+                "    (\"Average IC per REP\", NAMEOF('ME'[Average IC per REP]), 5)",
+                "}"
+              ],
+              "type": "calculated"
+            }
+          }
+        ]
+      },
+      {
+        "name": "Reformat",
+        "calculationGroup": {
+          "calculationItems": [
+            {
+              "name": "Reformat Display",
+              "expression": "SELECTEDMEASURE()",
+              "formatStringDefinition": {
+                "expression": [
+                  "VAR _Value = SELECTEDMEASURE ()",
+                  "VAR _Result = ",
+                  "    SWITCH ( ",
+                  "        TRUE,",
+                  "        _Value >= 100000,",
+                  "        \"0,,.0M\",",
+                  "        _Value >= 1000,",
+                  "        \"0,.0K\",",
+                  "        SELECTEDMEASUREFORMATSTRING ()",
+                  "    )",
+                  "RETURN",
+                  "    _Result"
+                ]
+              }
+            }
+          ]
+        },
+        "columns": [
+          {
+            "name": "Name",
+            "annotations": [
+              {
+                "name": "SummarizationSetBy",
+                "value": "Automatic"
+              }
+            ],
+            "dataType": "string",
+            "isHidden": true,
+            "lineageTag": "493a0fe9-f8f6-4668-9bcb-605070241826",
+            "sortByColumn": "Ordinal",
+            "sourceColumn": "Name",
+            "summarizeBy": "none"
+          },
+          {
+            "name": "Ordinal",
+            "annotations": [
+              {
+                "name": "SummarizationSetBy",
+                "value": "Automatic"
+              }
+            ],
+            "dataType": "int64",
+            "formatString": "0",
+            "isHidden": true,
+            "lineageTag": "5b4dba38-eb4e-48d1-ba65-c6d231672d38",
+            "sourceColumn": "Ordinal",
+            "summarizeBy": "sum"
+          }
+        ],
+        "isHidden": true,
+        "lineageTag": "f73444ef-26ae-4607-a15b-6ac2b9473f73",
+        "partitions": [
+          {
+            "name": "Reformat",
+            "mode": "import",
+            "source": {
+              "type": "calculationGroup"
+            }
+          }
+        ]
+      },
+      {
+        "name": "Glossary",
+        "annotations": [
+          {
+            "name": "PBI_ResultType",
+            "value": "Table"
+          },
+          {
+            "name": "PBI_NavigationStepName",
+            "value": "Navigation"
+          }
+        ],
+        "changedProperties": [
+          {
+            "property": "IsHidden"
+          }
+        ],
+        "columns": [
+          {
+            "name": "名称",
+            "annotations": [
+              {
+                "name": "SummarizationSetBy",
+                "value": "Automatic"
+              }
+            ],
+            "changedProperties": [
+              {
+                "property": "IsHidden"
+              }
+            ],
+            "dataType": "string",
+            "isHidden": true,
+            "lineageTag": "cf88b7b4-df8c-4b81-b8ce-04d7bd6f75b7",
+            "sourceColumn": "名称",
+            "summarizeBy": "none"
+          },
+          {
+            "name": "说明",
+            "annotations": [
+              {
+                "name": "SummarizationSetBy",
+                "value": "Automatic"
+              }
+            ],
+            "changedProperties": [
+              {
+                "property": "IsHidden"
+              }
+            ],
+            "dataType": "string",
+            "isHidden": true,
+            "lineageTag": "93537d83-1c1c-447c-9c16-210ffb7576e2",
+            "sourceColumn": "说明",
+            "summarizeBy": "none"
+          }
+        ],
+        "isHidden": true,
+        "lineageTag": "b4f6af8d-32b9-42b8-acc0-31e69c8e9f48",
+        "partitions": [
+          {
+            "name": "Glossary",
+            "mode": "import",
+            "queryGroup": "Load",
+            "source": {
+              "expression": [
+                "let",
+                "    Source = Excel.Workbook(File.Contents(paramFolderPath & \"\\Data\\Glossary.xlsx\"), null, true),",
+                "    _data_Table = Source{[Item=\"_data\",Kind=\"Table\"]}[Data],",
+                "    #\"Changed Type\" = Table.TransformColumnTypes(_data_Table,{{\"名称\", type text}, {\"说明\", type text}}),",
+                "    #\"Sorted Rows\" = Table.Sort(#\"Changed Type\",{{\"名称\", Order.Ascending}})",
+                "in",
+                "    #\"Sorted Rows\""
+              ],
+              "type": "m"
+            }
+          }
+        ]
+      },
+      {
+        "name": "Show Pct",
+        "annotations": [
+          {
+            "name": "PBI_ResultType",
+            "value": "Table"
+          },
+          {
+            "name": "PBI_NavigationStepName",
+            "value": "Navigation"
+          }
+        ],
+        "columns": [
+          {
+            "name": "Value",
+            "annotations": [
+              {
+                "name": "SummarizationSetBy",
+                "value": "Automatic"
+              }
+            ],
+            "dataType": "string",
+            "lineageTag": "0c6aa2f3-59c3-445a-b109-58274cf0292e",
+            "sourceColumn": "Value",
+            "summarizeBy": "none"
+          }
+        ],
+        "lineageTag": "6957065d-74a3-491f-a77e-0ed95522291f",
+        "partitions": [
+          {
+            "name": "Show Pct",
+            "mode": "import",
+            "source": {
+              "expression": [
+                "let",
+                "    Source = Table.FromRows(Json.Document(Binary.Decompress(Binary.FromText(\"i45WerRmiVJsLAA=\", BinaryEncoding.Base64), Compression.Deflate)), let _t = ((type nullable text) meta [Serialized.Text = true]) in type table [Value = _t])",
+                "in",
+                "    Source"
+              ],
+              "type": "m"
+            }
+          }
+        ]
+      }
+    ]
+  }
+}

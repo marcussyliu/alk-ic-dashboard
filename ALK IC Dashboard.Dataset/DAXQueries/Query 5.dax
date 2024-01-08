@@ -1,0 +1,14 @@
+DEFINE
+    MEASURE 'ME'[IC Dynamic (for Range Analysis)] = IF ( 
+		[IC (for Range Analysis)] <> BLANK (),
+		IF ( 
+			ISFILTERED ( 'Show Pct'[Value] ),
+			FORMAT ( [IC %GT (for Range Analysis)], "0.0%" ),
+			FORMAT ( [IC (for Range Analysis)], "#,0" )
+		)
+	)
+
+EVALUATE
+    SUMMARIZECOLUMNS(
+        "IC Dynamic (for Range Analysis)", 'ME'[IC Dynamic (for Range Analysis)]
+    )

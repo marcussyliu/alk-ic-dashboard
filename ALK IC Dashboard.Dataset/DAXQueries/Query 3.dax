@@ -1,0 +1,5 @@
+EVALUATE
+SUMMARIZECOLUMNS (
+	Position[ID],
+	"x", FORMAT(blank(),"#,0")
+)

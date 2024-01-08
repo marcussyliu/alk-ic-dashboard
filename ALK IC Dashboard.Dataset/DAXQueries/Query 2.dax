@@ -1,0 +1,85 @@
+DEFINE
+	VAR __DS0FilterTable = 
+		TREATAS({"Current"}, 'Date'[Year Quarter Label])
+
+	VAR __DS0FilterTable2 = 
+		TREATAS({"Initial"}, 'IC2'[IC Type])
+
+	VAR __DS0FilterTable3 = 
+		TREATAS({1}, 'Date'[Quarter In Scope (Y/N)])
+
+	VAR __DS0Core = 
+		SUMMARIZECOLUMNS(
+			ROLLUPADDISSUBTOTAL(
+				ROLLUPGROUP('IC2'[Initial Target Range], 'IC2'[Initial Target Range ID]), "IsGrandTotalRowTotal"
+			),
+			ROLLUPADDISSUBTOTAL(ROLLUPGROUP('IC2'[IC Range], 'IC2'[IC Range ID]), "IsGrandTotalColumnTotal"),
+			__DS0FilterTable,
+			__DS0FilterTable2,
+			__DS0FilterTable3,
+			"IC_Dynamic__for_Range_Analysis_", 'ME'[IC Dynamic (for Range Analysis)],
+			"v_IC_Dynamic__for_Range_Analysis__FormatString", IGNORE('ME'[IC Dynamic (for Range Analysis) FormatString])
+		)
+
+	VAR __DS0PrimaryWindowed = 
+		TOPN(
+			102,
+			SUMMARIZE(
+				__DS0Core,
+				'IC2'[Initial Target Range],
+				'IC2'[Initial Target Range ID],
+				[IsGrandTotalRowTotal]
+			),
+			[IsGrandTotalRowTotal],
+			0,
+			'IC2'[Initial Target Range ID],
+			1,
+			'IC2'[Initial Target Range],
+			1
+		)
+
+	VAR __DS0SecondaryBase = 
+		SUMMARIZE(__DS0Core, 'IC2'[IC Range], 'IC2'[IC Range ID], [IsGrandTotalColumnTotal])
+
+	VAR __DS0Secondary = 
+		TOPN(
+			102,
+			__DS0SecondaryBase,
+			[IsGrandTotalColumnTotal],
+			1,
+			'IC2'[IC Range ID],
+			1,
+			'IC2'[IC Range],
+			1
+		)
+
+	VAR __DS0BodyLimited = 
+		NATURALLEFTOUTERJOIN(
+			__DS0PrimaryWindowed,
+			SUBSTITUTEWITHINDEX(
+				__DS0Core,
+				"ColumnIndex",
+				__DS0Secondary,
+				[IsGrandTotalColumnTotal],
+				ASC,
+				'IC2'[IC Range ID],
+				ASC,
+				'IC2'[IC Range],
+				ASC
+			)
+		)
+
+EVALUATE
+	__DS0Secondary
+
+ORDER BY
+	[IsGrandTotalColumnTotal], 'IC2'[IC Range ID], 'IC2'[IC Range]
+
+EVALUATE
+	__DS0BodyLimited
+
+ORDER BY
+	[IsGrandTotalRowTotal] DESC,
+	'IC2'[Initial Target Range ID],
+	'IC2'[Initial Target Range],
+	[ColumnIndex]

@@ -1,0 +1,15 @@
+DEFINE
+    MEASURE 'ME'[Eligible HC Dynamic (for Range Analysis)] =
+	IF ( 
+		[Eligible HC (for Range Analysis)] <> BLANK (),
+		IF ( 
+   			ISFILTERED ( 'Show Pct'[Value] ),
+			FORMAT ( [Eligible HC %GT (for Range Analysis)], "0.0%" ),
+			FORMAT ( [Eligible HC (for Range Analysis)], "#,0" )
+		)
+)
+
+EVALUATE
+    SUMMARIZECOLUMNS(
+        "Eligible HC Dynamic (for Range Analysis)", 'ME'[Eligible HC Dynamic (for Range Analysis)]
+    )
