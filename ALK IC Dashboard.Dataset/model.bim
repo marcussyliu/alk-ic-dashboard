@@ -2852,6 +2852,11 @@
               ")"
             ],
             "lineageTag": "b512b5d7-d2c0-4d5a-982b-7774cc73b321"
+          },
+          {
+            "name": "test1",
+            "expression": "\"added test1 measure\"",
+            "lineageTag": "f60113bd-efae-4b9e-a72d-e03487f9afd3"
           }
         ],
         "partitions": [
